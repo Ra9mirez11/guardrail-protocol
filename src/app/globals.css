@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #08090c;
+  --foreground: #f0f2f5;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  overflow-x: hidden;
+}
+
+/* Cyber Matrix Background Grid */
+.bg-cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(27, 31, 43, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27, 31, 43, 0.4) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.glow-safe {
+  box-shadow: 0 0 25px rgba(0, 255, 163, 0.15);
+}
+
+.glow-danger {
+  box-shadow: 0 0 25px rgba(255, 59, 92, 0.2);
+}
+
+.glow-warn {
+  box-shadow: 0 0 25px rgba(255, 184, 0, 0.15);
+}
