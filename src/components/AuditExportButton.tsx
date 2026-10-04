@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import React, { useState } from 'react';
-import { Download, Check, ShieldCheck, FileCheck, Printer, X, Award, ExternalLink, ShieldAlert } from 'lucide-react';
+import { Download, Check, ShieldCheck, FileCheck, Printer, X } from 'lucide-react';
 import { SecurityAuditReport } from '@/lib/types';
 
 interface AuditExportButtonProps {
@@ -106,20 +106,20 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
 
       {showPreviewModal && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto"
           onClick={() => setShowPreviewModal(false)}
         >
           <div 
             id="printable-audit-certificate"
-            className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto p-6 md:p-8 rounded-3xl bg-[#070914] border border-emerald-500/40 shadow-[0_0_90px_rgba(16,185,129,0.25)] space-y-6 font-mono text-left"
+            className="relative w-full max-w-2xl max-h-[85vh] my-auto flex flex-col rounded-3xl bg-[#070914] border border-emerald-500/40 shadow-[0_0_90px_rgba(16,185,129,0.25)] font-mono text-left overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             
             {/* Certificate Header Banner */}
-            <div className="border-b border-white/[0.08] pb-5 flex flex-wrap items-center justify-between gap-3">
+            <div className="p-5 sm:p-6 border-b border-white/[0.08] flex items-center justify-between flex-shrink-0 bg-white/[0.02]">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-                  <ShieldCheck className="w-7 h-7" />
+                <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -128,7 +128,7 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
                     </span>
                     <span className="text-[11px] text-slate-400">ISO/SEC-SOLANA-V1</span>
                   </div>
-                  <h3 className="text-base font-bold text-white tracking-wider mt-0.5">
+                  <h3 className="text-sm sm:text-base font-bold text-white tracking-wider mt-0.5">
                     GUARDRAIL PROTOCOL AUDIT CERTIFICATE
                   </h3>
                 </div>
@@ -141,57 +141,59 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
               </button>
             </div>
 
-            {/* Visual Formal Certificate Card */}
-            <div className={`p-6 rounded-2xl bg-black/70 border ${statusBorder} space-y-5 shadow-inner`}>
-              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
-                <div>
-                  <span className="text-[10px] text-slate-500 block uppercase">Security Verdict & Classification:</span>
-                  <span className={`text-base font-black tracking-wide ${statusColor}`}>
-                    {report.categoryLabel} ({report.riskScore}/100 RISK)
-                  </span>
+            {/* Visual Formal Certificate Card (Scrollable Area) */}
+            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto max-h-[58vh]">
+              <div className={`p-5 rounded-2xl bg-black/70 border ${statusBorder} space-y-4 shadow-inner`}>
+                <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                  <div>
+                    <span className="text-[10px] text-slate-500 block uppercase">Security Verdict & Classification:</span>
+                    <span className={`text-base font-black tracking-wide ${statusColor}`}>
+                      {report.categoryLabel} ({report.riskScore}/100 RISK)
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-slate-500 block uppercase">Solana Slot & Hash:</span>
+                    <span className="text-xs text-cyan-300 font-bold">SLOT {report.attestationProof.attestationSlot}</span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-[10px] text-slate-500 block uppercase">Solana Slot & Hash:</span>
-                  <span className="text-xs text-cyan-300 font-bold">SLOT {report.attestationProof.attestationSlot}</span>
-                </div>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Target Token Mint:</span>
-                  <span className="text-cyan-300 break-all text-[11px] font-bold">{report.mint}</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                    <span className="text-[10px] text-slate-500 block uppercase mb-1">Target Token Mint:</span>
+                    <span className="text-cyan-300 break-all text-[11px] font-bold">{report.mint}</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                    <span className="text-[10px] text-slate-500 block uppercase mb-1">Anchor PDA Certificate:</span>
+                    <span className="text-emerald-300 break-all text-[11px] font-bold">{report.attestationProof.pdaAddress}</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                    <span className="text-[10px] text-slate-500 block uppercase mb-1">Transfer Hook & Taxes:</span>
+                    <span className="text-white text-[11px]">
+                      {report.extensions.hasTransferHook ? 'DETECTED (CPI HOOK)' : 'None (Safe)'} | Fee: {(report.extensions.transferFeeBps / 100).toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                    <span className="text-[10px] text-slate-500 block uppercase mb-1">Pre-Flight Simulation:</span>
+                    <span className="text-white text-[11px]">
+                      {report.simulation.canExecuteSell ? 'VERIFIED NON-HONEYPOT (PASS)' : 'BLOCKED / REVERTED'}
+                    </span>
+                  </div>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Anchor PDA Certificate:</span>
-                  <span className="text-emerald-300 break-all text-[11px] font-bold">{report.attestationProof.pdaAddress}</span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Transfer Hook & Taxes:</span>
-                  <span className="text-white text-[11px]">
-                    {report.extensions.hasTransferHook ? 'DETECTED (CPI HOOK)' : 'None (Safe)'} | Fee: {(report.extensions.transferFeeBps / 100).toFixed(2)}%
-                  </span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Pre-Flight Simulation:</span>
-                  <span className="text-white text-[11px]">
-                    {report.simulation.canExecuteSell ? 'VERIFIED NON-HONEYPOT (PASS)' : 'BLOCKED / REVERTED'}
-                  </span>
-                </div>
-              </div>
 
-              <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-[11px] text-slate-300 leading-relaxed font-sans">
-                <p>
-                  <strong className="text-emerald-400 font-mono">Cryptographic Verification:</strong> This formal certificate authenticates that on-chain storage layout (TLV extensions), mint & freeze authorities, and transaction invariants were verified on Solana.
-                </p>
-                <div className="mt-2.5 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono text-slate-400">
-                  <span>AUDITOR SIGNER: {report.attestationProof.auditorAuthority}</span>
-                  <span>ANCHOR ID: Guard1111...</span>
+                <div className="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-[11px] text-slate-300 leading-relaxed font-sans">
+                  <p>
+                    <strong className="text-emerald-400 font-mono">Cryptographic Verification:</strong> This formal certificate authenticates that on-chain storage layout (TLV extensions), mint & freeze authorities, and transaction invariants were verified on Solana.
+                  </p>
+                  <div className="mt-2 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono text-slate-400">
+                    <span>AUDITOR SIGNER: {report.attestationProof.auditorAuthority}</span>
+                    <span>ANCHOR ID: Guard1111...</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Actions: Download JSON & Print Official Proof */}
-            <div className="no-print flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div className="no-print p-4 sm:p-5 border-t border-white/[0.08] bg-white/[0.01] flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
               <button
                 onClick={handlePrintCertificate}
                 className="px-5 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-bold text-cyan-300 hover:text-white flex items-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(6,182,212,0.15)]"

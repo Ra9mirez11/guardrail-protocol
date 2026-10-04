@@ -400,7 +400,7 @@ export default function Home() {
                   </div>
 
                   <a
-                    href={`https://jup.ag/swap?inputMint=So11111111111111111111111111111111111111112&outputMint=${report.mint}`}
+                    href={`https://jup.ag/swap/SOL-${report.mint}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`mt-6 w-full py-4 rounded-xl font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-98 ${isCritical ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/30' : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/30'}`}
