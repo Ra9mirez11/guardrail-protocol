@@ -78,7 +78,7 @@ export function SimulatorCard({ simulation, mint }: { simulation?: SimulationRes
           disabled={isSimulating}
           className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2.5 transition-all shadow-[0_0_25px_rgba(6,182,212,0.3)] active:scale-98 disabled:opacity-50"
         >
-          <PlayCircle className="w-4 h-4 fill-black text-black flex-shrink-0" />
+          <PlayCircle className="w-4 h-4 text-black flex-shrink-0" />
           <span>{isSimulating ? "SIMULATING SWAP ROUTE..." : simComplete ? "RE-RUN DUMMY SWAP SIMULATION" : "SIMULATE ZERO-RISK DUMMY SWAP"}</span>
         </button>
       </div>
