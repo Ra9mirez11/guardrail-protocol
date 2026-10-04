@@ -102,9 +102,6 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-xl tracking-tight text-white">GUARDRAIL</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                  SOLANA 2.0
-                </span>
               </div>
               <p className="text-[11px] text-slate-400 font-mono tracking-wide">Zero-Trust Pre-Execution Firewall</p>
             </div>
@@ -127,18 +124,7 @@ export default function Home() {
 
       {/* CINEMATIC HERO SECTION */}
       <section className="relative max-w-7xl mx-auto px-6 pt-16 pb-12 text-center space-y-8">
-        {/* Clean High-Tech HUD Capsule Badge */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-emerald-400/40 bg-[#020d09]/90 backdrop-blur-xl shadow-[0_0_25px_rgba(0,255,170,0.25)] select-none"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#00ffaa] animate-ping" />
-          <span className="text-xs sm:text-sm font-mono font-bold text-white tracking-wider drop-shadow-[0_0_8px_rgba(0,255,170,0.8)]">
-            Next-Gen Token-2022 Honeypot & Transfer Hook Sentinel
-          </span>
-        </motion.div>
+
 
         {/* Massive Metallic Heading */}
         <motion.div
