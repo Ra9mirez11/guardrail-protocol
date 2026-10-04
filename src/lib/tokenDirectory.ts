@@ -1,4 +1,4 @@
-export interface TrackedToken {
+﻿export interface TrackedToken {
   name: string;
   symbol: string;
   mint: string;
@@ -7,8 +7,53 @@ export interface TrackedToken {
   isPositive: boolean;
   volume24h: string;
   standard: 'SPL-Token' | 'Token-2022';
-  badge: 'TRENDING' | 'NEW MINT' | 'HIGH VOL' | 'TOKEN-2022';
+  badge: 'TRENDING' | 'NEW MINT' | 'HIGH VOL' | 'TOKEN-2022' | 'EXPLOIT VECTOR';
+  isExploitVector?: boolean;
+  exploitType?: 'PREDATORY_FEE' | 'TRANSFER_HOOK_TRAP' | 'PERMANENT_DELEGATE_DRAIN';
 }
+
+// Live Exploit Vector Test Mints (Honeypot, 99% Tax, Transfer Hook Trap)
+export const EXPLOIT_VECTORS_RADAR: TrackedToken[] = [
+  {
+    name: '99% Tax Extortion',
+    symbol: 'TAX99',
+    mint: 'Tax9999999999999999999999999999999999999999',
+    price: '.0004',
+    change24h: '+840.5%',
+    isPositive: true,
+    volume24h: '.4M',
+    standard: 'Token-2022',
+    badge: 'EXPLOIT VECTOR',
+    isExploitVector: true,
+    exploitType: 'PREDATORY_FEE'
+  },
+  {
+    name: 'Blacklist Hook Honeypot',
+    symbol: 'HOOKTRAP',
+    mint: 'HookTrap111111111111111111111111111111111111',
+    price: '.82',
+    change24h: '+120.0%',
+    isPositive: true,
+    volume24h: '',
+    standard: 'Token-2022',
+    badge: 'EXPLOIT VECTOR',
+    isExploitVector: true,
+    exploitType: 'TRANSFER_HOOK_TRAP'
+  },
+  {
+    name: 'Perm Delegate Drainer',
+    symbol: 'DRAIN',
+    mint: 'DrainMe1111111111111111111111111111111111111',
+    price: '.000001',
+    change24h: '-99.9%',
+    isPositive: false,
+    volume24h: '.1M',
+    standard: 'Token-2022',
+    badge: 'EXPLOIT VECTOR',
+    isExploitVector: true,
+    exploitType: 'PERMANENT_DELEGATE_DRAIN'
+  }
+];
 
 // 100% Verified Real Existing Mainnet Mints
 export const TOKEN_2022_RADAR: TrackedToken[] = [
@@ -16,10 +61,10 @@ export const TOKEN_2022_RADAR: TrackedToken[] = [
     name: 'BonkEarn',
     symbol: 'BERN',
     mint: 'CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo',
-    price: '$0.0031',
+    price: '.0031',
     change24h: '+14.2%',
     isPositive: true,
-    volume24h: '$1.2M',
+    volume24h: '.2M',
     standard: 'Token-2022',
     badge: 'TOKEN-2022'
   },
@@ -27,10 +72,10 @@ export const TOKEN_2022_RADAR: TrackedToken[] = [
     name: 'Jito Staked SOL',
     symbol: 'JITOSOL',
     mint: 'J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn',
-    price: '$178.50',
+    price: '.50',
     change24h: '+3.9%',
     isPositive: true,
-    volume24h: '$19.2M',
+    volume24h: '.2M',
     standard: 'Token-2022',
     badge: 'TOKEN-2022'
   },
@@ -38,10 +83,10 @@ export const TOKEN_2022_RADAR: TrackedToken[] = [
     name: 'Guacamole Token',
     symbol: 'GUAC',
     mint: 'AZsHEMXd36Bj1EMNXhowJajpUXzrKcK57wW4ZGXVa7yR',
-    price: '$0.000012',
+    price: '.000012',
     change24h: '+2.1%',
     isPositive: true,
-    volume24h: '$410K',
+    volume24h: '',
     standard: 'Token-2022',
     badge: 'TOKEN-2022'
   },
@@ -49,10 +94,10 @@ export const TOKEN_2022_RADAR: TrackedToken[] = [
     name: 'BlazeStake Staked SOL',
     symbol: 'bSOL',
     mint: 'bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1',
-    price: '$174.10',
+    price: '.10',
     change24h: '+4.1%',
     isPositive: true,
-    volume24h: '$8.4M',
+    volume24h: '.4M',
     standard: 'Token-2022',
     badge: 'TOKEN-2022'
   },
@@ -60,10 +105,10 @@ export const TOKEN_2022_RADAR: TrackedToken[] = [
     name: 'Marinade Staked SOL',
     symbol: 'mSOL',
     mint: 'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So',
-    price: '$180.20',
+    price: '.20',
     change24h: '+4.2%',
     isPositive: true,
-    volume24h: '$14.1M',
+    volume24h: '.1M',
     standard: 'Token-2022',
     badge: 'TOKEN-2022'
   }
@@ -74,10 +119,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'Wrapped SOL',
     symbol: 'SOL',
     mint: 'So11111111111111111111111111111111111111112',
-    price: '$148.20',
+    price: '.20',
     change24h: '+4.5%',
     isPositive: true,
-    volume24h: '$2.1B',
+    volume24h: '.1B',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -85,10 +130,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'USD Coin',
     symbol: 'USDC',
     mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    price: '$1.00',
+    price: '.00',
     change24h: '0.0%',
     isPositive: true,
-    volume24h: '$980.1M',
+    volume24h: '.1M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -96,10 +141,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'Tether USD',
     symbol: 'USDT',
     mint: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
-    price: '$1.00',
+    price: '.00',
     change24h: '0.0%',
     isPositive: true,
-    volume24h: '$640.8M',
+    volume24h: '.8M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -107,10 +152,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'Jupiter',
     symbol: 'JUP',
     mint: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN',
-    price: '$0.88',
+    price: '.88',
     change24h: '-1.4%',
     isPositive: false,
-    volume24h: '$84.2M',
+    volume24h: '.2M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -118,10 +163,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'Raydium',
     symbol: 'RAY',
     mint: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
-    price: '$3.45',
+    price: '.45',
     change24h: '+12.7%',
     isPositive: true,
-    volume24h: '$65.3M',
+    volume24h: '.3M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -129,10 +174,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'Bonk',
     symbol: 'BONK',
     mint: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
-    price: '$0.0000214',
+    price: '.0000214',
     change24h: '+8.4%',
     isPositive: true,
-    volume24h: '$124.5M',
+    volume24h: '.5M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -140,10 +185,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'dogwifhat',
     symbol: 'WIF',
     mint: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm',
-    price: '$2.34',
+    price: '.34',
     change24h: '+3.1%',
     isPositive: true,
-    volume24h: '$210.8M',
+    volume24h: '.8M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -151,10 +196,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'Render Token',
     symbol: 'RENDER',
     mint: 'rndrizKT3MK1iimdxRdWabcF7Zg7AR5T4nud4EkHBof',
-    price: '$5.62',
+    price: '.62',
     change24h: '+6.1%',
     isPositive: true,
-    volume24h: '$48.1M',
+    volume24h: '.1M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -162,10 +207,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'Drift Protocol',
     symbol: 'DRIFT',
     mint: 'DriFtupJYLTosbwoN8koMbEYSx54aFAVLddWsbksjwg7',
-    price: '$1.15',
+    price: '.15',
     change24h: '+9.3%',
     isPositive: true,
-    volume24h: '$22.4M',
+    volume24h: '.4M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   },
@@ -173,10 +218,10 @@ export const TOP_TRADED_TOKENS: TrackedToken[] = [
     name: 'Pyth Network',
     symbol: 'PYTH',
     mint: 'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3',
-    price: '$0.38',
+    price: '.38',
     change24h: '+5.7%',
     isPositive: true,
-    volume24h: '$38.2M',
+    volume24h: '.2M',
     standard: 'SPL-Token',
     badge: 'HIGH VOL'
   }
@@ -187,10 +232,10 @@ export const NEW_RADAR_MINTS: TrackedToken[] = [
     name: 'Popcat',
     symbol: 'POPCAT',
     mint: '7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr',
-    price: '$1.42',
+    price: '.42',
     change24h: '+18.9%',
     isPositive: true,
-    volume24h: '$150.2M',
+    volume24h: '.2M',
     standard: 'SPL-Token',
     badge: 'TRENDING'
   },
@@ -198,10 +243,10 @@ export const NEW_RADAR_MINTS: TrackedToken[] = [
     name: 'Cat in a dogs world',
     symbol: 'MEW',
     mint: 'MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5',
-    price: '$0.0089',
+    price: '.0089',
     change24h: '+9.4%',
     isPositive: true,
-    volume24h: '$80.4M',
+    volume24h: '.4M',
     standard: 'SPL-Token',
     badge: 'TRENDING'
   },
@@ -209,10 +254,10 @@ export const NEW_RADAR_MINTS: TrackedToken[] = [
     name: 'BOOK OF MEME',
     symbol: 'BOME',
     mint: 'ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82',
-    price: '$0.0094',
+    price: '.0094',
     change24h: '-2.1%',
     isPositive: false,
-    volume24h: '$95.0M',
+    volume24h: '.0M',
     standard: 'SPL-Token',
     badge: 'TRENDING'
   },
@@ -220,10 +265,10 @@ export const NEW_RADAR_MINTS: TrackedToken[] = [
     name: 'Samoyedcoin',
     symbol: 'SAMO',
     mint: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
-    price: '$0.0098',
+    price: '.0098',
     change24h: '+6.4%',
     isPositive: true,
-    volume24h: '$4.2M',
+    volume24h: '.2M',
     standard: 'SPL-Token',
     badge: 'TRENDING'
   },
@@ -231,10 +276,10 @@ export const NEW_RADAR_MINTS: TrackedToken[] = [
     name: 'Slerf',
     symbol: 'SLERF',
     mint: '7BgBvyjrZX1YKz4oh9mjb8ZScatkkwb8DzFx7LoiVkM3',
-    price: '$0.16',
+    price: '.16',
     change24h: '-4.8%',
     isPositive: false,
-    volume24h: '$31.4M',
+    volume24h: '.4M',
     standard: 'SPL-Token',
     badge: 'TRENDING'
   }

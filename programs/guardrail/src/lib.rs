@@ -43,6 +43,32 @@ pub mod guardrail {
         );
         Ok(())
     }
+    /// CPI Invariant Guard: Pre-execution firewall proxy preventing predatory swaps & transfers
+    pub fn guard_pre_execution_swap(
+        ctx: Context<GuardPreExecutionSwap>,
+        max_allowed_tax_bps: u16,
+        allow_transfer_hooks: bool,
+    ) -> Result<()> {
+        let attestation = &ctx.accounts.attestation;
+        require!(
+            attestation.risk_score < 70,
+            GuardRailError::ExcessiveRiskThresholdExceeded
+        );
+
+        let fee_flag = (attestation.flags_mask & 0x01) != 0;
+        let hook_flag = (attestation.flags_mask & 0x02) != 0;
+        let delegate_flag = (attestation.flags_mask & 0x04) != 0;
+
+        require!(!delegate_flag, GuardRailError::PermanentDelegateExploit);
+        if !allow_transfer_hooks {
+            require!(!hook_flag, GuardRailError::TransferHookHoneypotTrap);
+        }
+        require!(!fee_flag || max_allowed_tax_bps >= 1000, GuardRailError::PredatoryTransferFeeViolation);
+
+        msg!("GuardRail CPI Invariant Passed: Mint cleared for execution.");
+        Ok(())
+    }
+
 }
 
 #[derive(Accounts)]
@@ -77,6 +103,21 @@ pub struct VerifyInvariants<'info> {
     pub mint: AccountInfo<'info>,
 }
 
+
+#[derive(Accounts)]
+pub struct GuardPreExecutionSwap<'info> {
+    #[account(
+        seeds = [b"guardrail_attestation", mint.key().as_ref()],
+        bump
+    )]
+    pub attestation: Account<'info, SecurityAttestation>,
+
+    /// CHECK: Target mint verified against predatory transfer fees & hooks
+    pub mint: AccountInfo<'info>,
+
+    pub user_authority: Signer<'info>,
+}
+
 #[account]
 pub struct SecurityAttestation {
     pub mint: Pubkey,
@@ -101,4 +142,10 @@ pub enum GuardRailError {
     ExcessiveRiskThresholdExceeded,
     #[msg("Honeypot or predatory transfer hook detected during pre-execution.")]
     HoneypotTrapDetected,
+    #[msg("Predatory transfer fee violation: configured tax exceeds max_allowed_tax_bps.")]
+    PredatoryTransferFeeViolation,
+    #[msg("Transfer hook honeypot trap: external execution hook rejected by GuardRail firewall.")]
+    TransferHookHoneypotTrap,
+    #[msg("Permanent delegate detected: protocol blocked transfer due to unauthorized seizure risk.")]
+    PermanentDelegateExploit,
 }

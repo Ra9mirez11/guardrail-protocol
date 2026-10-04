@@ -31,7 +31,9 @@ import {
   PlayCircle
 } from 'lucide-react';
 import { SecurityAuditReport } from '@/lib/types';
-import { TOP_TRADED_TOKENS, TOKEN_2022_RADAR, NEW_RADAR_MINTS, TrackedToken } from '@/lib/tokenDirectory';
+import { TOP_TRADED_TOKENS, TOKEN_2022_RADAR, NEW_RADAR_MINTS, EXPLOIT_VECTORS_RADAR, TrackedToken } from '@/lib/tokenDirectory';
+import { AuditExportButton } from '@/components/AuditExportButton';
+import { SdkModal } from '@/components/SdkModal';
 import { TiltCard } from '@/components/ui/TiltCard';
 import { BorderBeam } from '@/components/ui/BorderBeam';
 import { HoloGauge } from '@/components/ui/HoloGauge';
@@ -49,7 +51,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<SecurityAuditReport | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'TOKEN22' | 'TOP' | 'NEW'>('TOKEN22');
+  const [activeTab, setActiveTab] = useState<'TOKEN22' | 'TOP' | 'NEW' | 'EXPLOITS'>('TOKEN22');
   const [copiedBlink, setCopiedBlink] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
 
@@ -86,7 +88,9 @@ export default function Home() {
     ? TOKEN_2022_RADAR 
     : activeTab === 'TOP' 
       ? TOP_TRADED_TOKENS 
-      : NEW_RADAR_MINTS;
+      : activeTab === 'EXPLOITS'
+        ? EXPLOIT_VECTORS_RADAR
+        : NEW_RADAR_MINTS;
 
   const isSafe = report?.riskLevel === 'SAFE';
   const isWarn = report?.riskLevel === 'WARNING';
@@ -125,6 +129,7 @@ export default function Home() {
 
           {/* Quick Metrics / Network Status */}
           <div className="flex items-center gap-3">
+            <SdkModal />
             <WalletMultiButton className="!bg-emerald-400 !text-black !font-mono !text-xs !font-bold !rounded-xl !h-9 !px-4 hover:!bg-emerald-300 transition-all !shadow-[0_0_20px_rgba(16,185,129,0.3)]" />
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -352,7 +357,11 @@ export default function Home() {
                   </div>
                 </div>
 
-                <AttestationBadge proof={report.attestationProof} mint={report.mint} />
+                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                    <span className="text-[11px] font-mono text-slate-400">CRYPTOGRAPHIC AUDIT PROOF</span>
+                    <AuditExportButton report={report} />
+                  </div>
+                  <AttestationBadge proof={report.attestationProof} mint={report.mint} />
               </TiltCard>
 
               {/* BENTO ITEM 2: JUPITER SAFE-ROUTE & TWITTER BLINK (Col 5) */}
