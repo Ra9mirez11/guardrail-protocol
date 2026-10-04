@@ -24,7 +24,11 @@ import {
   Layers,
   TrendingUp,
   Check,
-  Radar
+  Radar,
+  Terminal,
+  FileCode,
+  Award,
+  PlayCircle
 } from 'lucide-react';
 import { SecurityAuditReport } from '@/lib/types';
 import { TOP_TRADED_TOKENS, TOKEN_2022_RADAR, NEW_RADAR_MINTS, TrackedToken } from '@/lib/tokenDirectory';
@@ -34,6 +38,9 @@ import { HoloGauge } from '@/components/ui/HoloGauge';
 import { BackgroundBeams } from '@/components/ui/BackgroundBeams';
 import { MarqueeTicker } from '@/components/ui/Marquee';
 import { EncryptedText } from '@/components/ui/encrypted-text';
+import { ForensicTlvCard } from '@/components/ForensicTlvCard';
+import { SimulatorCard } from '@/components/SimulatorCard';
+import { AttestationBadge } from '@/components/AttestationBadge';
 
 export default function Home() {
   const [mintInput, setMintInput] = useState('CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo');

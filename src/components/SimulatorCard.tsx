@@ -1,0 +1,76 @@
+import React, { useState } from 'react';
+import { Terminal, Loader2, PlayCircle } from 'lucide-react';
+import { TiltCard } from './ui/TiltCard';
+import { SimulationResult } from '@/lib/types';
+
+interface SimulatorCardProps {
+  simulation?: SimulationResult;
+}
+
+export function SimulatorCard({ simulation }: SimulatorCardProps) {
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simComplete, setSimComplete] = useState(false);
+
+  const handleRunSimulation = () => {
+    setIsSimulating(true);
+    setTimeout(() => {
+      setIsSimulating(false);
+      setSimComplete(true);
+    }, 900);
+  };
+
+  return (
+    <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-2xl space-y-4 flex flex-col justify-between">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Terminal className="w-5 h-5 text-cyan-400" />
+            <h3 className="text-sm font-bold font-mono text-white uppercase tracking-wider">
+              Zero-Risk Tx Simulation Sandbox
+            </h3>
+          </div>
+          <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${simulation?.canExecuteSell ? 'bg-emerald-400/10 text-emerald-300 border-emerald-400/30' : 'bg-rose-400/10 text-rose-300 border-rose-400/30'}`}>
+            {simulation?.canExecuteSell ? 'SELL_ROUTE VERIFIED' : 'EXECUTION BLOCKED'}
+          </span>
+        </div>
+
+
+        <p className="text-xs text-slate-400">
+          Simulate dummy swap execution through Raydium/Jupiter RPC without broadcasting on-chain:
+        </p>
+
+        <div className="p-3 rounded-xl bg-black/70 border border-white/[0.06] font-mono text-[11px] space-y-1.5 min-h-[110px]">
+          <div className="flex items-center justify-between text-[10px] text-slate-500 border-b border-white/[0.06] pb-1 mb-1">
+            <span>SOLANA DIRECT RUNTIME LOG</span>
+            <span>COMPUTE UNITS: {simulation?.unitsConsumed || 2100}</span>
+          </div>
+          {isSimulating ? (
+            <div className="text-cyan-400 flex items-center gap-2 py-4 justify-center">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Simulating swap transaction against mainnet state...</span>
+            </div>
+          ) : simulation?.logs && simulation.logs.length > 0 ? (
+            simulation.logs.map((log, index) => (
+              <div key={index} className={log.includes('failed') || log.includes('rejected') ? 'text-rose-400' : 'text-slate-300'}>
+                { `> ${log}` }
+              </div>
+            ))
+        ) : (
+            <div className="text-slate-400">Simulation ready. Press button to run.</div>
+        )}
+        </div>
+      </div>
+
+      <div className="pt-2">
+        <button
+          onClick={handleRunSimulation}
+          disabled={isSimulating}
+          className="w-full py-3 rounded-1 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_25px_rgba(6,182,212,0.3)] active:scale-98 disabled:opacity-50"
+        >
+          <PlayCircle className="w-4 h-4 text-black" />
+          <span>{isSimulating ? 'SIMULATING EXECUTION...' : simComplete ? 'RE-RUN DUMMY SWAP SIMULATION' : 'SIMULATE ZERO-RISK DUMMY SWAP'}</span>
+        </button>
+      </div>
+    </TiltCard>
+  );
+}

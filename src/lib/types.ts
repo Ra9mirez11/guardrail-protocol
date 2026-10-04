@@ -27,10 +27,35 @@ export interface StandardSecurityAnalysis {
 
 export interface SimulationResult {
   simulationSuccessful: boolean;
-  logs: string[];
+  canExecuteSell: boolean;
+  expectedOutputLamports: number;
   unitsConsumed: number;
+  logs: string[];
   detectedRevertReason: string | null;
   isHoneypotSuspect: boolean;
+  simulatedAt: number;
+}
+
+export interface RawTlvInspection {
+  rawAccountBytesLength: number;
+  tlvDataHex: string;
+  extensionCount: number;
+  extensionsParsed: {
+    typeId: number;
+    typeName: string;
+    byteLength: number;
+    details: string;
+  }[];
+}
+
+export interface OnChainAttestationProof {
+  pdaAddress: string;
+  programId: string;
+  auditorAuthority: string;
+  attestationSlot: number;
+  auditHash: string;
+  isAttestedOnChain: boolean;
+  txSignature?: string;
 }
 
 export interface SecurityAuditReport {
@@ -46,6 +71,8 @@ export interface SecurityAuditReport {
   standard: StandardSecurityAnalysis;
   extensions: TokenExtensionAnalysis;
   simulation: SimulationResult;
+  tlvInspection: RawTlvInspection;
+  attestationProof: OnChainAttestationProof;
   flags: {
     title: string;
     description: string;
