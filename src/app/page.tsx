@@ -528,11 +528,13 @@ export default function Home() {
               </div>
 
               {/* BENTO ROW 3: DECOMPILED TLV BYTECODE & ZERO-RISK TX SIMULATOR */}
-              <div className="sm:col-span-2 lg:col-span-2">
-                <ForensicTlvCard tlv={report.tlvInspection} />
-              </div>
-              <div className="sm:col-span-2 lg:col-span-2">
-                <SimulatorCard simulation={report.simulation} />
+              <div className="lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-6">
+                  <ForensicTlvCard tlv={report.tlvInspection} />
+                </div>
+                <div className="lg:col-span-6">
+                  <SimulatorCard simulation={report.simulation} />
+                </div>
               </div>
 
             </div>
