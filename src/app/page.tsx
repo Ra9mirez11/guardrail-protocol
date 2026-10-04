@@ -379,36 +379,64 @@ export default function Home() {
 
               {/* BENTO ITEM 2: JUPITER SAFE-ROUTE & TWITTER BLINK (Col 5) */}
               <div className="lg:col-span-5 flex flex-col gap-6">
-                {/* Jupiter Direct Safe Swap Card */}
-                <TiltCard className="flex-1 bg-gradient-to-br from-emerald-500/[0.08] via-[#070912]/90 to-transparent backdrop-blur-2xl border border-emerald-500/30 p-6 shadow-2xl flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <Zap className="w-4 h-4 fill-emerald-400" />
-                        Jupiter Safe-Route Available
-                      </span>
-                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${isSafe ? 'bg-emerald-400/20 text-emerald-300 border-emerald-400/30' : isWarn ? 'bg-amber-400/20 text-amber-300 border-amber-400/30' : 'bg-rose-400/20 text-rose-300 border-rose-400/30'}`}>
-                        {isCritical ? 'HONEYPOT DETECTED' : '0% HONEYPOT'}
-                      </span>
+                {/* Multi-DEX Liquidity & Safe Routing Card */}
+                  <TiltCard className="flex-1 bg-gradient-to-br from-emerald-500/[0.08] via-[#070912]/90 to-transparent backdrop-blur-2xl border border-emerald-500/30 p-6 shadow-2xl flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <Zap className="w-4 h-4 fill-emerald-400" />
+                          Multi-DEX Execution Router
+                        </span>
+                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${isSafe ? 'bg-emerald-400/20 text-emerald-300 border-emerald-400/30' : isWarn ? 'bg-amber-400/20 text-amber-300 border-amber-400/30' : 'bg-rose-400/20 text-rose-300 border-rose-400/30'}`}>
+                          {isCritical ? 'HIGH RISK HONEYPOT' : 'INVARIANTS VERIFIED'}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">Direct Liquidity Access</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        {isCritical 
+                          ? 'Warning: Token invariants failed safety thresholds. Trading this asset carries severe loss risk.'
+                          : 'Pre-flight checks passed. If the asset is new and unindexed by Jupiter, use Raydium or inspect pool depth on DexScreener.'}
+                      </p>
                     </div>
-                    <h3 className="text-lg font-bold text-white">Instant Liquidity Routing</h3>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                      {isCritical 
-                        ? 'Warning: Token invariants failed safety thresholds. Trading this asset carries severe loss risk.'
-                        : 'Contract invariants cleared. You can trade this token safely with auto-routed slippage protection via Jupiter.'}
-                    </p>
-                  </div>
 
-                  <a
-                    href={`https://jup.ag/swap/SOL-${report.mint}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`mt-6 w-full py-4 rounded-xl font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-98 ${isCritical ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/30' : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/30'}`}
-                  >
-                    <span>{isCritical ? 'PROCEED WITH EXTREME CAUTION' : 'EXECUTE SAFE-SWAP ON JUPITER'}</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </TiltCard>
+                    <div className="mt-5 space-y-2.5">
+                      {/* Primary Jupiter Aggregator Route */}
+                      <a
+                        href={`https://jup.ag/swap/SOL-${report.mint}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-full py-3.5 rounded-xl font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_25px_rgba(16,185,129,0.3)] active:scale-98 ${isCritical ? 'bg-rose-500 hover:bg-rose-400 text-white' : 'bg-emerald-400 hover:bg-emerald-300 text-black'}`}
+                      >
+                        <span>EXECUTE ON JUPITER (AGGREGATED)</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+
+                      {/* Fallback Direct DEX & Liquidity Links */}
+                      <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                        <a
+                          href={`https://raydium.io/swap/?inputMint=sol&outputMint=${report.mint}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="py-2.5 px-3 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white flex items-center justify-center gap-1.5 transition-all text-[11px]"
+                          title="Direct AMM Swap for new or unindexed token pools"
+                        >
+                          <span>RAYDIUM SWAP</span>
+                          <ExternalLink className="w-3 h-3 text-slate-400" />
+                        </a>
+
+                        <a
+                          href={`https://dexscreener.com/solana/${report.mint}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="py-2.5 px-3 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white flex items-center justify-center gap-1.5 transition-all text-[11px]"
+                          title="View live pool liquidity, market cap, and trading volume"
+                        >
+                          <span>DEXSCREENER</span>
+                          <ExternalLink className="w-3 h-3 text-slate-400" />
+                        </a>
+                      </div>
+                    </div>
+                  </TiltCard>
 
                 {/* Twitter / Solana Blink Card */}
                 <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-2xl space-y-3">
