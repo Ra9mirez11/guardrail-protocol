@@ -25,8 +25,6 @@ export const SplineEyebotLocal = () => {
         clientY: e.clientY,
         screenX: e.screenX,
         screenY: e.screenY,
-        pageX: e.pageX,
-        pageY: e.pageY,
         bubbles: true,
         cancelable: true,
         pointerType: 'mouse',
@@ -39,8 +37,6 @@ export const SplineEyebotLocal = () => {
         clientY: e.clientY,
         screenX: e.screenX,
         screenY: e.screenY,
-        pageX: e.pageX,
-        pageY: e.pageY,
         bubbles: true,
         cancelable: true
       });
