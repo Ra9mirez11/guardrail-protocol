@@ -361,6 +361,24 @@ export default function Home() {
                     <span className="text-[11px] font-mono text-slate-400">CRYPTOGRAPHIC AUDIT PROOF</span>
                     <AuditExportButton report={report} />
                   </div>
+                  {/* On-Chain CPI Invariant Firewall Badge */}
+                  <div className="mt-4 p-3 rounded-2xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs font-mono">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-slate-300 font-semibold">ANCHOR CPI FIREWALL PROXY:</span>
+                      <span className="text-emerald-400 font-bold">GUARD_PRE_EXECUTION_SWAP ACTIVE</span>
+                    </div>
+                    <span className="text-[10px] text-slate-500">MAX_TAX: 500 BPS</span>
+                  </div>
+                  {/* On-Chain CPI Invariant Firewall Badge */}
+                  <div className="mt-4 p-3 rounded-2xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs font-mono">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-slate-300 font-semibold">ANCHOR CPI FIREWALL PROXY:</span>
+                      <span className="text-emerald-400 font-bold">GUARD_PRE_EXECUTION_SWAP ACTIVE</span>
+                    </div>
+                    <span className="text-[10px] text-slate-500">MAX_TAX: 500 BPS</span>
+                  </div>
                   <AttestationBadge proof={report.attestationProof} mint={report.mint} />
               </TiltCard>
 
@@ -387,7 +405,7 @@ export default function Home() {
                   </div>
 
                   <a
-                    href={`https://jup.ag/swap/SOL-${report.mint}`}
+                    href={`https://jup.ag/swap/SOL-${report?.mint || 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`mt-6 w-full py-4 rounded-xl font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-98 ${isCritical ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/30' : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/30'}`}

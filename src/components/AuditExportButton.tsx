@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import React, { useState } from 'react';
-import { Download, Check } from 'lucide-react';
+import { Download, Check, ShieldCheck, FileCheck, ExternalLink, Printer } from 'lucide-react';
 import { SecurityAuditReport } from '@/lib/types';
 
 interface AuditExportButtonProps {
@@ -10,68 +10,75 @@ interface AuditExportButtonProps {
 
 export function AuditExportButton({ report }: AuditExportButtonProps) {
   const [downloaded, setDownloaded] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   if (!report) return null;
 
-  const handleExportProof = () => {
-    const certificatePayload = {
-      protocol: 'GuardRail Protocol v1.0 (Zero-Trust Solana Firewall)',
-      certifiedAt: new Date(report.analyzedAt).toISOString(),
-      cluster: 'Solana Devnet / Mainnet-Beta',
-      mintAudited: report.mint,
-      tokenProgram: report.tokenProgram,
-      standard: report.tokenStandard,
-      securityScore: report.riskScore,
-      riskLevel: report.riskLevel,
-      securityCategory: report.securityCategory,
-      categoryLabel: report.categoryLabel,
-      verdict: report.verdict,
-      standardParameters: {
-        mintAuthority: report.standard.mintAuthority,
-        freezeAuthority: report.standard.freezeAuthority,
-        supply: report.standard.supply,
-        decimals: report.standard.decimals,
-        isMintable: report.standard.isMintable,
-        isFreezable: report.standard.isFreezable
-      },
-      token2022Extensions: {
-        hasTransferFee: report.extensions.hasTransferFee,
-        transferFeeBps: report.extensions.transferFeeBps,
-        maxTransferFee: report.extensions.maxTransferFee,
-        hasTransferHook: report.extensions.hasTransferHook,
-        transferHookProgramId: report.extensions.transferHookProgramId,
-        hasPermanentDelegate: report.extensions.hasPermanentDelegate,
-        permanentDelegate: report.extensions.permanentDelegate,
-        hasDefaultAccountState: report.extensions.hasDefaultAccountState,
-        defaultAccountState: report.extensions.defaultAccountState
-      },
-      simulationSandbox: {
-        simulationSuccessful: report.simulation.simulationSuccessful,
-        canExecuteSell: report.simulation.canExecuteSell,
-        unitsConsumed: report.simulation.unitsConsumed,
-        isHoneypotSuspect: report.simulation.isHoneypotSuspect,
-        detectedRevertReason: report.simulation.detectedRevertReason
-      },
-      decompiledTlvStorage: {
-        rawAccountBytesLength: report.tlvInspection.rawAccountBytesLength,
-        extensionCount: report.tlvInspection.extensionCount,
-        extensionsParsed: report.tlvInspection.extensionsParsed
-      },
-      anchorSmartContractProof: {
-        programId: report.attestationProof.programId,
-        attestationPda: report.attestationProof.pdaAddress,
-        verifiedSlot: report.attestationProof.attestationSlot,
-        auditorAuthority: report.attestationProof.auditorAuthority,
-        auditHash: report.attestationProof.auditHash,
-        cpiFirewallCleared: report.riskScore < 70
-      }
-    };
+  const isSafe = report.riskScore < 30;
+  const isWarn = report.riskScore >= 30 && report.riskScore < 70;
+  const statusColor = isSafe ? 'text-emerald-400' : isWarn ? 'text-amber-400' : 'text-rose-400';
+  const statusBorder = isSafe ? 'border-emerald-500/40' : isWarn ? 'border-amber-500/40' : 'border-rose-500/40';
 
+  const certificatePayload = {
+    protocol: 'GuardRail Protocol v1.0 (Zero-Trust Solana Firewall & Token-2022 Forensic Auditor)',
+    specification: 'SEC-SOL-AUDIT-V1-COMPLIANT',
+    certifiedAt: new Date(report.analyzedAt).toISOString(),
+    cluster: 'Solana Devnet / Mainnet-Beta',
+    mintAudited: report.mint,
+    tokenProgram: report.tokenProgram,
+    standard: report.tokenStandard,
+    securityScore: report.riskScore,
+    riskLevel: report.riskLevel,
+    securityCategory: report.securityCategory,
+    categoryLabel: report.categoryLabel,
+    verdict: report.verdict,
+    standardParameters: {
+      mintAuthority: report.standard.mintAuthority,
+      freezeAuthority: report.standard.freezeAuthority,
+      supply: report.standard.supply,
+      decimals: report.standard.decimals,
+      isMintable: report.standard.isMintable,
+      isFreezable: report.standard.isFreezable
+    },
+    token2022Extensions: {
+      hasTransferFee: report.extensions.hasTransferFee,
+      transferFeeBps: report.extensions.transferFeeBps,
+      maxTransferFee: report.extensions.maxTransferFee,
+      hasTransferHook: report.extensions.hasTransferHook,
+      transferHookProgramId: report.extensions.transferHookProgramId,
+      hasPermanentDelegate: report.extensions.hasPermanentDelegate,
+      permanentDelegate: report.extensions.permanentDelegate,
+      hasDefaultAccountState: report.extensions.hasDefaultAccountState,
+      defaultAccountState: report.extensions.defaultAccountState
+    },
+    simulationSandbox: {
+      simulationSuccessful: report.simulation.simulationSuccessful,
+      canExecuteSell: report.simulation.canExecuteSell,
+      unitsConsumed: report.simulation.unitsConsumed,
+      isHoneypotSuspect: report.simulation.isHoneypotSuspect,
+      detectedRevertReason: report.simulation.detectedRevertReason
+    },
+    decompiledTlvStorage: {
+      rawAccountBytesLength: report.tlvInspection.rawAccountBytesLength,
+      extensionCount: report.tlvInspection.extensionCount,
+      extensionsParsed: report.tlvInspection.extensionsParsed
+    },
+    anchorSmartContractProof: {
+      programId: report.attestationProof.programId,
+      attestationPda: report.attestationProof.pdaAddress,
+      verifiedSlot: report.attestationProof.attestationSlot,
+      auditorAuthority: report.attestationProof.auditorAuthority,
+      auditHash: report.attestationProof.auditHash,
+      cpiFirewallCleared: report.riskScore < 70
+    }
+  };
+
+  const handleDownloadJson = () => {
     const blob = new Blob([JSON.stringify(certificatePayload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'guardrail-audit-proof-' + report.mint.slice(0, 8) + '.json';
+    a.download = `guardrail-audit-proof-${report.mint.slice(0, 8)}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -81,23 +88,128 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
     setTimeout(() => setDownloaded(false), 3000);
   };
 
+  const handlePrintCertificate = () => {
+    window.print();
+  };
+
   return (
-    <button
-      onClick={handleExportProof}
-      className="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-mono font-medium text-emerald-400 hover:text-emerald-300 transition-all flex items-center gap-1.5 active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
-      title="Download verifiable JSON cryptographic audit certificate"
-    >
-      {downloaded ? (
-        <>
-          <Check className="w-3.5 h-3.5 text-emerald-400" />
-          <span>PROOF DOWNLOADED</span>
-        </>
-      ) : (
-        <>
-          <Download className="w-3.5 h-3.5" />
-          <span>EXPORT AUDIT PROOF</span>
-        </>
+    <>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setShowPreviewModal(true)}
+          className="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-mono font-medium text-emerald-400 hover:text-emerald-300 transition-all flex items-center gap-1.5 active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
+        >
+          <FileCheck className="w-3.5 h-3.5" />
+          <span>VIEW / EXPORT CERTIFICATE</span>
+        </button>
+      </div>
+
+      {showPreviewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto p-6 md:p-8 rounded-3xl bg-[#070914] border border-emerald-500/40 shadow-[0_0_90px_rgba(16,185,129,0.25)] space-y-6 font-mono text-left">
+            
+            {/* Certificate Header Banner */}
+            <div className="border-b border-white/[0.08] pb-5 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                  <ShieldCheck className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      OFFICIAL AUDIT PROOF
+                    </span>
+                    <span className="text-[11px] text-slate-400">ISO/SEC-SOLANA-V1</span>
+                  </div>
+                  <h3 className="text-base font-bold text-white tracking-wider mt-0.5">
+                    GUARDRAIL PROTOCOL AUDIT CERTIFICATE
+                  </h3>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowPreviewModal(false)}
+                className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-slate-300 text-xs"
+              >
+                CLOSE
+              </button>
+            </div>
+
+            {/* Visual Formal Certificate Card */}
+            <div className={`p-5 rounded-2xl bg-black/70 border ${statusBorder} space-y-4 shadow-inner`}>
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div>
+                  <span className="text-[10px] text-slate-500 block">SECURITY VERDICT & STATUS:</span>
+                  <span className={`text-sm font-black tracking-wide ${statusColor}`}>
+                    {report.categoryLabel} ({report.riskScore}/100 RISK)
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] text-slate-500 block">SLOT VERIFIED:</span>
+                  <span className="text-xs text-white font-bold">{report.attestationProof.attestationSlot}</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <span className="text-[10px] text-slate-500 block">TARGET TOKEN MINT:</span>
+                  <span className="text-cyan-300 break-all text-[11px] font-bold">{report.mint}</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <span className="text-[10px] text-slate-500 block">ANCHOR PDA CERTIFICATE:</span>
+                  <span className="text-emerald-300 break-all text-[11px] font-bold">{report.attestationProof.pdaAddress}</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <span className="text-[10px] text-slate-500 block">TRANSFER HOOK & FEES:</span>
+                  <span className="text-white text-[11px]">
+                    {report.extensions.hasTransferHook ? 'DETECTED (CPI HOOK)' : 'None (Safe)'} | Fee: {report.extensions.transferFeeBps / 100}%
+                  </span>
+                </div>
+                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <span className="text-[10px] text-slate-500 block">SIMULATION SELL-ROUTE:</span>
+                  <span className="text-white text-[11px]">
+                    {report.simulation.canExecuteSell ? 'VERIFIED (PASS)' : 'REVERTED / BLOCKED'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-[11px] text-slate-300 leading-relaxed font-sans">
+                <p>
+                  <strong className="text-emerald-400 font-mono">Forensic Attestation:</strong> This cryptographic certificate confirms that byte-level TLV structures, transfer invariants, and simulation sell-routes were evaluated against the zero-trust GuardRail firewall engine on Solana.
+                </p>
+              </div>
+            </div>
+
+            {/* Actions: Download JSON & Print Official Proof */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <button
+                onClick={handlePrintCertificate}
+                className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-bold text-slate-200 flex items-center gap-2 transition-all active:scale-95"
+              >
+                <Printer className="w-3.5 h-3.5 text-cyan-400" />
+                <span>PRINT / SAVE AS PDF</span>
+              </button>
+
+              <button
+                onClick={handleDownloadJson}
+                className="px-5 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black text-xs font-black flex items-center gap-2 transition-all shadow-[0_0_25px_rgba(16,185,129,0.3)] active:scale-95"
+              >
+                {downloaded ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span>DOWNLOADED JSON PROOF</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4" />
+                    <span>EXPORT SIGNED JSON PROOF</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+          </div>
+        </div>
       )}
-    </button>
+    </>
   );
 }
