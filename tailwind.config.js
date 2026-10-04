@@ -9,18 +9,25 @@ module.exports = {
     extend: {
       colors: {
         cyber: {
-          dark: '#08090C',
-          card: '#0F1117',
-          border: '#1B1F2B',
-          neon: '#00FFA3',
-          warn: '#FFB800',
-          danger: '#FF3B5C',
-          subtle: '#8C94A6'
+          void: '#030407',
+          card: '#080A10',
+          border: 'rgba(255, 255, 255, 0.08)',
+          emerald: '#10B981',
+          teal: '#14B8A6',
+          cyan: '#06B6D4'
         }
       },
-      fontFamily: {
-        mono: ['JetBrains Mono', 'Menlo', 'monospace']
-      }
+      animation: {
+        'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        'border-beam': {
+          '100%': {
+            'offset-distance': '100%',
+          },
+        },
+      },
     },
   },
   plugins: [],
