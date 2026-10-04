@@ -90,10 +90,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3.5 group cursor-pointer">
-            <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-400 via-teal-400/20 to-transparent p-px shadow-[0_0_30px_rgba(16,185,129,0.35)]">
-              <div className="w-full h-full bg-[#05070d] rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105">
-                <ShieldCheck className="w-5 h-5 text-emerald-400" />
-              </div>
+            <div className="relative w-12 h-12 rounded-2xl overflow-hidden p-0.5 bg-gradient-to-tr from-emerald-400 via-teal-400/30 to-transparent shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-transform group-hover:scale-105">
+              <img 
+                src="/logo.png" 
+                alt="GuardRail Logo" 
+                className="w-full h-full object-cover rounded-[14px]"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
