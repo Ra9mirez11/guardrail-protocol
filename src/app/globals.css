@@ -86,3 +86,84 @@
     filter: drop-shadow(0 0 10px rgba(0, 255, 170, 0.9));
   }
 }
+
+/* === HUD SENTINEL EYE & CAPSULE SYSTEM === */
+:root {
+  --neon-green: #00ffaa;
+  --dark-bg: rgba(2, 18, 12, 0.75);
+}
+
+/* Hlavní kontejner / kapsle */
+.hud-capsule {
+  display: inline-flex;
+  align-items: center;
+  background: var(--dark-bg);
+  border: 1px solid rgba(0, 255, 170, 0.3);
+  border-radius: 24px;
+  padding: 8px 24px 8px 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 255, 170, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+/* Prostor pro kyber-oko */
+.cyber-eye-container {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  margin-right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Oční důlek (vnější pevný prstenec) */
+.eye-socket {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--neon-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
+  z-index: 2;
+}
+
+/* Zornička oka, kterou ovládá JavaScript */
+.eye-pupil {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px 4px var(--neon-green), 0 0 4px #ffffff;
+  transition: transform 0.1s ease-out;
+}
+
+/* Vnější high-tech skenovací prstenec HUDu, který se nezávisle točí */
+.eye-scanner-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px dashed var(--neon-green);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: hudRotate 6s linear infinite;
+}
+
+/* Agresivní monospace text */
+.hud-text {
+  color: #ffffff;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+  text-shadow: 0 0 8px var(--neon-green);
+}
+
+/* Animace neustálého mechanického otáčení HUD prstence */
+@keyframes hudRotate {
+  100% { transform: rotate(360deg); }
+}
