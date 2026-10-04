@@ -23,7 +23,8 @@ import {
   Radio,
   Layers,
   TrendingUp,
-  Check
+  Check,
+  Radar
 } from 'lucide-react';
 import { SecurityAuditReport } from '@/lib/types';
 import { TOP_TRADED_TOKENS, TOKEN_2022_RADAR, NEW_RADAR_MINTS, TrackedToken } from '@/lib/tokenDirectory';
@@ -66,7 +67,6 @@ export default function Home() {
       setReport(data);
     } catch (err: any) {
       setError(err?.message || 'Error occurred while contacting Solana network');
-      setReport(null);
     } finally {
       setLoading(false);
     }
@@ -248,241 +248,274 @@ export default function Home() {
       </section>
 
       {/* ASYMMETRICAL 3D BENTO GRID (THE AUDIT & VERDICT ENGINE) */}
-      <section className="max-w-7xl mx-auto px-6 py-6">
-        {/* Loading Pulse */}
-        {loading && (
-          <div className="rounded-3xl p-12 text-center bg-[#070912]/80 backdrop-blur-2xl border border-emerald-400/30 shadow-[0_0_50px_rgba(16,185,129,0.15)] space-y-4 animate-pulse">
-            <Loader2 className="w-10 h-10 text-emerald-400 animate-spin mx-auto" />
-            <h3 className="text-xl font-black text-white font-mono tracking-wider">
-              INSPECTING SOLANA ON-CHAIN INVARIANTS...
-            </h3>
-            <p className="text-sm text-slate-400 font-mono">
-              Querying raw account state, parsing extension TLVs and evaluating CPI call graph
-            </p>
-          </div>
-        )}
-
+      <section className="max-w-7xl mx-auto px-6 py-6 relative">
         {/* Error State */}
-        {error && !loading && (
-          <div className="p-6 rounded-3xl bg-rose-500/10 border border-rose-500/30 text-rose-300 flex items-center gap-4 font-mono text-sm shadow-xl">
+        {error && (
+          <div className="p-6 mb-6 rounded-3xl bg-rose-500/10 border border-rose-500/30 text-rose-300 flex items-center gap-4 font-mono text-sm shadow-xl">
             <AlertTriangle className="w-6 h-6 flex-shrink-0 text-rose-400" />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Bento Grid Analytics */}
-        {report && !loading && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            {/* BENTO ITEM 1: HERO VERDICT & 3D HOLO GAUGE (Col 7) */}
-            <TiltCard className="lg:col-span-7 bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-8 shadow-2xl relative">
-              <BorderBeam size={250} duration={14} colorFrom="#10B981" colorTo="#06B6D4" />
+        {/* Bento Grid Analytics with Persistent Layout and High-Tech Radar HUD Overlay */}
+        <div className="relative">
+          {/* Laser Radar Scan Overlay when Loading */}
+          <AnimatePresence>
+            {loading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 z-30 rounded-3xl backdrop-blur-md bg-black/60 border border-emerald-500/30 overflow-hidden flex flex-col items-center justify-center p-6"
+              >
+                {/* Moving Laser Scan Line */}
+                <motion.div
+                  initial={{ top: '0%' }}
+                  animate={{ top: '100%' }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+                  className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_25px_#10B981]"
+                />
+
+                <div className="p-8 rounded-3xl bg-[#060810]/95 border border-emerald-400/40 shadow-[0_0_80px_rgba(16,185,129,0.25)] flex flex-col items-center text-center max-w-md mx-auto space-y-4">
+                  <div className="relative w-16 h-16 flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-full border-2 border-emerald-400/20 border-t-emerald-400 animate-spin" />
+                    <Radar className="w-8 h-8 text-emerald-400 animate-pulse" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-white font-mono tracking-wider flex items-center justify-center gap-2">
+                      <span>SCANNING ON-CHAIN INVARIANTS</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 font-mono mt-1">
+                      Querying mint TLVs - Dissecting transfer hooks & permissions
+                    </p>
+                  </div>
+                  <div className="w-full bg-slate-800/80 rounded-full h-1.5 overflow-hidden">
+                    <motion.div 
+                      className="bg-gradient-to-r from-emerald-400 to-cyan-400 h-full rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 0.8, repeat: Infinity }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {report && (
+            <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 transition-all duration-300 ${loading ? 'opacity-40 filter blur-[1px]' : 'opacity-100'}`}>
               
-              <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                <div className="space-y-4 max-w-sm">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-white/[0.04] border border-white/[0.08]">
-                    <span className={`w-2 h-2 rounded-full ${isSafe ? 'bg-emerald-400' : isWarn ? 'bg-amber-400' : 'bg-rose-400'} animate-ping`} />
-                    <span className="text-slate-400">STATUS:</span>
-                    <span className={isSafe ? 'text-emerald-400' : isWarn ? 'text-amber-400' : 'text-rose-400'}>
-                      {report.riskLevel}
-                    </span>
+              {/* BENTO ITEM 1: HERO VERDICT & 3D HOLO GAUGE (Col 7) */}
+              <TiltCard className="lg:col-span-7 bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-8 shadow-2xl relative">
+                <BorderBeam size={250} duration={14} colorFrom="#10B981" colorTo="#06B6D4" />
+                
+                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="space-y-4 max-w-sm">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-white/[0.04] border border-white/[0.08]">
+                      <span className={`w-2 h-2 rounded-full ${isSafe ? 'bg-emerald-400' : isWarn ? 'bg-amber-400' : 'bg-rose-400'} animate-ping`} />
+                      <span className="text-slate-400">STATUS:</span>
+                      <span className={isSafe ? 'text-emerald-400' : isWarn ? 'text-amber-400' : 'text-rose-400'}>
+                        {report.riskLevel}
+                      </span>
+                    </div>
+
+                    <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+                      {report.categoryLabel || (isSafe ? 'VERIFIED SECURE CONTRACT' : isWarn ? 'ELEVATED RISK NOTICE' : 'CRITICAL THREAT / HONEYPOT')}
+                    </h2>
+
+                    <p className="text-sm text-slate-300 leading-relaxed font-sans">
+                      {report.verdict}
+                    </p>
+
+                    <div className="p-3 rounded-xl bg-black/50 border border-white/[0.06] font-mono text-xs text-slate-400 break-all">
+                      <span className="text-slate-500 block mb-0.5">AUDITED MINT:</span>
+                      <span className="text-white font-bold">{report.mint}</span>
+                    </div>
                   </div>
 
-                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-                    {report.categoryLabel || (isSafe ? 'VERIFIED SECURE CONTRACT' : isWarn ? 'ELEVATED RISK NOTICE' : 'CRITICAL THREAT / HONEYPOT')}
-                  </h2>
-
-                  <p className="text-sm text-slate-300 leading-relaxed font-sans">
-                    {report.verdict}
-                  </p>
-
-                  <div className="p-3 rounded-xl bg-black/50 border border-white/[0.06] font-mono text-xs text-slate-400 break-all">
-                    <span className="text-slate-500 block mb-0.5">AUDITED MINT:</span>
-                    <span className="text-white font-bold">{report.mint}</span>
+                  {/* 3D Holographic Gauge */}
+                  <div className="flex-shrink-0">
+                    <HoloGauge score={report.riskScore} />
                   </div>
                 </div>
-
-                {/* 3D Holographic Gauge */}
-                <div className="flex-shrink-0">
-                  <HoloGauge score={report.riskScore} />
-                </div>
-              </div>
-            </TiltCard>
-
-            {/* BENTO ITEM 2: JUPITER SAFE-ROUTE & TWITTER BLINK (Col 5) */}
-            <div className="lg:col-span-5 flex flex-col gap-6">
-              {/* Jupiter Direct Safe Swap Card */}
-              <TiltCard className="flex-1 bg-gradient-to-br from-emerald-500/[0.08] via-[#070912]/90 to-transparent backdrop-blur-2xl border border-emerald-500/30 p-6 shadow-2xl flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                      <Zap className="w-4 h-4 fill-emerald-400" />
-                      Jupiter Safe-Route Available
-                    </span>
-                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${isSafe ? 'bg-emerald-400/20 text-emerald-300 border-emerald-400/30' : isWarn ? 'bg-amber-400/20 text-amber-300 border-amber-400/30' : 'bg-rose-400/20 text-rose-300 border-rose-400/30'}`}>
-                      {isCritical ? 'HONEYPOT DETECTED' : '0% HONEYPOT'}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold text-white">Instant Liquidity Routing</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    {isCritical 
-                      ? 'Warning: Token invariants failed safety thresholds. Trading this asset carries severe loss risk.'
-                      : 'Contract invariants cleared. You can trade this token safely with auto-routed slippage protection via Jupiter.'}
-                  </p>
-                </div>
-
-                <a
-                  href={`https://jup.ag/swap/SOL-${report.mint}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`mt-6 w-full py-4 rounded-xl font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-98 ${isCritical ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/30' : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/30'}`}
-                >
-                  <span>{isCritical ? 'PROCEED WITH EXTREME CAUTION' : 'EXECUTE SAFE-SWAP ON JUPITER'}</span>
-                  <ExternalLink className="w-4 h-4" />
-                </a>
               </TiltCard>
 
-              {/* Twitter / Solana Blink Card */}
-              <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-2xl space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <Share2 className="w-4 h-4 text-cyan-400" />
-                    Solana Blink Action Card
-                  </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-400/10 text-cyan-300 border border-cyan-400/30">
-                    X / TWITTER NATIVE
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400">
-                  Share 1-click verifiable audits directly inside Twitter feeds:
-                </p>
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-black/60 border border-white/[0.08]">
-                  <span className="text-xs font-mono text-slate-300 truncate flex-1">
-                    /api/actions/scan?mint={report.mint.slice(0, 8)}...
-                  </span>
-                  <button
-                    onClick={() => {
-                      const url = typeof window !== 'undefined' ? `${window.location.origin}/api/actions/scan?mint=${report.mint}` : `/api/actions/scan?mint=${report.mint}`;
-                      navigator.clipboard.writeText(url);
-                      setCopiedBlink(true);
-                      setTimeout(() => setCopiedBlink(false), 2000);
-                    }}
-                    className="px-3 py-1.5 rounded-lg bg-emerald-400 text-black font-bold text-xs font-mono flex items-center gap-1 shadow-md"
+              {/* BENTO ITEM 2: JUPITER SAFE-ROUTE & TWITTER BLINK (Col 5) */}
+              <div className="lg:col-span-5 flex flex-col gap-6">
+                {/* Jupiter Direct Safe Swap Card */}
+                <TiltCard className="flex-1 bg-gradient-to-br from-emerald-500/[0.08] via-[#070912]/90 to-transparent backdrop-blur-2xl border border-emerald-500/30 p-6 shadow-2xl flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <Zap className="w-4 h-4 fill-emerald-400" />
+                        Jupiter Safe-Route Available
+                      </span>
+                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${isSafe ? 'bg-emerald-400/20 text-emerald-300 border-emerald-400/30' : isWarn ? 'bg-amber-400/20 text-amber-300 border-amber-400/30' : 'bg-rose-400/20 text-rose-300 border-rose-400/30'}`}>
+                        {isCritical ? 'HONEYPOT DETECTED' : '0% HONEYPOT'}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-white">Instant Liquidity Routing</h3>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      {isCritical 
+                        ? 'Warning: Token invariants failed safety thresholds. Trading this asset carries severe loss risk.'
+                        : 'Contract invariants cleared. You can trade this token safely with auto-routed slippage protection via Jupiter.'}
+                    </p>
+                  </div>
+
+                  <a
+                    href={`https://jup.ag/swap/SOL-${report.mint}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`mt-6 w-full py-4 rounded-xl font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-98 ${isCritical ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/30' : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/30'}`}
                   >
-                    {copiedBlink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{copiedBlink ? 'COPIED' : 'COPY'}</span>
-                  </button>
-                </div>
-              </TiltCard>
+                    <span>{isCritical ? 'PROCEED WITH EXTREME CAUTION' : 'EXECUTE SAFE-SWAP ON JUPITER'}</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </TiltCard>
+
+                {/* Twitter / Solana Blink Card */}
+                <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                      <Share2 className="w-4 h-4 text-cyan-400" />
+                      Solana Blink Action Card
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-400/10 text-cyan-300 border border-cyan-400/30">
+                      X / TWITTER NATIVE
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    Share 1-click verifiable audits directly inside Twitter feeds:
+                  </p>
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-black/60 border border-white/[0.08]">
+                    <span className="text-xs font-mono text-slate-300 truncate flex-1">
+                      /api/actions/scan?mint={report.mint.slice(0, 8)}...
+                    </span>
+                    <button
+                      onClick={() => {
+                        const url = typeof window !== 'undefined' ? `${window.location.origin}/api/actions/scan?mint=${report.mint}` : `/api/actions/scan?mint=${report.mint}`;
+                        navigator.clipboard.writeText(url);
+                        setCopiedBlink(true);
+                        setTimeout(() => setCopiedBlink(false), 2000);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-emerald-400 text-black font-bold text-xs font-mono flex items-center gap-1 shadow-md"
+                    >
+                      {copiedBlink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copiedBlink ? 'COPIED' : 'COPY'}</span>
+                    </button>
+                  </div>
+                </TiltCard>
+              </div>
+
+              {/* BENTO ITEM 3: TOKEN-2022 ATTACK VECTOR MATRIX (Col 12 - 4 Columns) */}
+              <div className="lg:col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                {/* Vector 1: Transfer Hook CPI */}
+                <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-slate-400 uppercase">Transfer Hook CPI</span>
+                    {report.extensions.hasTransferHook ? (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40 animate-pulse">
+                        DETECTED
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                        NONE (SAFE)
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xl font-bold text-white">
+                    {report.extensions.hasTransferHook ? 'Active CPI Interceptor' : 'Standard Execution'}
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {report.extensions.hasTransferHook 
+                      ? `External hook (${report.extensions.transferHookProgramId?.slice(0, 8)}...) executed on every transfer. Honeypot risk high.` 
+                      : 'No external program invoked during transfers. Transactions cannot be selectively blocked.'}
+                  </p>
+                </TiltCard>
+
+                {/* Vector 2: Transfer Fee (Tax) */}
+                <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-slate-400 uppercase">Transfer Fee (Tax)</span>
+                    {report.extensions.hasTransferFee ? (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">
+                        {(report.extensions.transferFeeBps / 100).toFixed(2)}% TAX
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                        0% (CLEAN)
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xl font-bold text-white">
+                    {report.extensions.hasTransferFee ? `${(report.extensions.transferFeeBps / 100).toFixed(2)}% Withheld` : 'Zero Withholding'}
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {report.extensions.hasTransferFee 
+                      ? 'Configured fee is siphoned into creator fee treasury on every single transfer.' 
+                      : 'No transfer fee config exists on this token mint.'}
+                  </p>
+                </TiltCard>
+
+                {/* Vector 3: Permanent Delegate */}
+                <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-slate-400 uppercase">Permanent Delegate</span>
+                    {report.extensions.hasPermanentDelegate ? (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">
+                        ACTIVE (RISK)
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                        REVOKED
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xl font-bold text-white">
+                    {report.extensions.hasPermanentDelegate ? 'Arbitrary Seizure' : 'Immutable Ownership'}
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {report.extensions.hasPermanentDelegate 
+                      ? 'Central authority can confiscate or burn user tokens without wallet signature.' 
+                      : 'No master delegate exists. Token balances are strictly non-custodial.'}
+                  </p>
+                </TiltCard>
+
+                {/* Vector 4: Freeze Authority */}
+                <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-slate-400 uppercase">Freeze Authority</span>
+                    {report.standard.isFreezable ? (
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${isInstitutional ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'bg-amber-500/20 text-amber-400 border-amber-500/40'}`}>
+                        {isInstitutional ? 'COMPLIANCE KEY' : 'ENABLED'}
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                        BURNED
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xl font-bold text-white">
+                    {report.standard.isFreezable 
+                      ? (isInstitutional ? 'Institutional Compliance' : 'Wallets Freezable')
+                      : 'Permanently Revoked'}
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {report.standard.isFreezable 
+                      ? (isInstitutional 
+                          ? 'Official regulatory/compliance freeze control retained by issuer (Circle/Tether).'
+                          : 'Creator retains power to freeze recipient token accounts at will.')
+                      : 'Freeze key is permanently burned. Token transfers cannot be halted.'}
+                  </p>
+                </TiltCard>
+
+              </div>
+
             </div>
-
-            {/* BENTO ITEM 3: TOKEN-2022 ATTACK VECTOR MATRIX (Col 12 - 4 Columns) */}
-            <div className="lg:col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              
-              {/* Vector 1: Transfer Hook CPI */}
-              <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-xl space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-slate-400 uppercase">Transfer Hook CPI</span>
-                  {report.extensions.hasTransferHook ? (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40 animate-pulse">
-                      DETECTED
-                    </span>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                      NONE (SAFE)
-                    </span>
-                  )}
-                </div>
-                <div className="text-xl font-bold text-white">
-                  {report.extensions.hasTransferHook ? 'Active CPI Interceptor' : 'Standard Execution'}
-                </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  {report.extensions.hasTransferHook 
-                    ? `External hook (${report.extensions.transferHookProgramId?.slice(0, 8)}...) executed on every transfer. Honeypot risk high.` 
-                    : 'No external program invoked during transfers. Transactions cannot be selectively blocked.'}
-                </p>
-              </TiltCard>
-
-              {/* Vector 2: Transfer Fee (Tax) */}
-              <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-xl space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-slate-400 uppercase">Transfer Fee (Tax)</span>
-                  {report.extensions.hasTransferFee ? (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">
-                      {(report.extensions.transferFeeBps / 100).toFixed(2)}% TAX
-                    </span>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                      0% (CLEAN)
-                    </span>
-                  )}
-                </div>
-                <div className="text-xl font-bold text-white">
-                  {report.extensions.hasTransferFee ? `${(report.extensions.transferFeeBps / 100).toFixed(2)}% Withheld` : 'Zero Withholding'}
-                </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  {report.extensions.hasTransferFee 
-                    ? `Configured fee is siphoned into creator fee treasury on every single transfer.` 
-                    : 'No transfer fee config exists on this token mint.'}
-                </p>
-              </TiltCard>
-
-              {/* Vector 3: Permanent Delegate */}
-              <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-xl space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-slate-400 uppercase">Permanent Delegate</span>
-                  {report.extensions.hasPermanentDelegate ? (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">
-                      ACTIVE (RISK)
-                    </span>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                      REVOKED
-                    </span>
-                  )}
-                </div>
-                <div className="text-xl font-bold text-white">
-                  {report.extensions.hasPermanentDelegate ? 'Arbitrary Seizure' : 'Immutable Ownership'}
-                </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  {report.extensions.hasPermanentDelegate 
-                    ? 'Central authority can confiscate or burn user tokens without wallet signature.' 
-                    : 'No master delegate exists. Token balances are strictly non-custodial.'}
-                </p>
-              </TiltCard>
-
-              {/* Vector 4: Freeze Authority */}
-              <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-xl space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-slate-400 uppercase">Freeze Authority</span>
-                  {report.standard.isFreezable ? (
-                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${isInstitutional ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'bg-amber-500/20 text-amber-400 border-amber-500/40'}`}>
-                      {isInstitutional ? 'COMPLIANCE KEY' : 'ENABLED'}
-                    </span>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                      BURNED
-                    </span>
-                  )}
-                </div>
-                <div className="text-xl font-bold text-white">
-                  {report.standard.isFreezable 
-                    ? (isInstitutional ? 'Institutional Compliance' : 'Wallets Freezable')
-                    : 'Permanently Revoked'}
-                </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  {report.standard.isFreezable 
-                    ? (isInstitutional 
-                        ? 'Official regulatory/compliance freeze control retained by issuer (Circle/Tether).'
-                        : 'Creator retains power to freeze recipient token accounts at will.')
-                    : 'Freeze key is permanently burned. Token transfers cannot be halted.'}
-                </p>
-              </TiltCard>
-
-            </div>
-
-          </div>
-        )}
+          )}
+        </div>
       </section>
 
       {/* Ultra-Clean Footer */}
