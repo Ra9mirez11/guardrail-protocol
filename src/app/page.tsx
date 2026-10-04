@@ -41,6 +41,7 @@ import { EncryptedText } from '@/components/ui/encrypted-text';
 import { ForensicTlvCard } from '@/components/ForensicTlvCard';
 import { SimulatorCard } from '@/components/SimulatorCard';
 import { AttestationBadge } from '@/components/AttestationBadge';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 export default function Home() {
   const [mintInput, setMintInput] = useState('CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo');
@@ -120,7 +121,8 @@ export default function Home() {
           </div>
 
           {/* Quick Metrics / Network Status */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <WalletMultiButton className="!bg-emerald-400 !text-black !font-mono !text-xs !font-bold !rounded-xl !h-9 !px-4 hover:!bg-emerald-300 transition-all !shadow-[0_0_20px_rgba(16,185,129,0.3)]" />
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>MAINNET RADAR LIVE</span>
@@ -347,7 +349,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <AttestationBadge proof={report.attestationProof} />
+                <AttestationBadge proof={report.attestationProof} mint={report.mint} />
               </TiltCard>
 
               {/* BENTO ITEM 2: JUPITER SAFE-ROUTE & TWITTER BLINK (Col 5) */}

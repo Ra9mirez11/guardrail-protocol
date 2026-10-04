@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@solana/spl-token": "^0.4.8",
+    "@solana/wallet-adapter-base": "^0.9.28",
+    "@solana/wallet-adapter-react": "^0.15.40",
+    "@solana/wallet-adapter-react-ui": "^0.9.40",
+    "@solana/wallet-adapter-wallets": "^0.19.39",
     "@solana/web3.js": "^1.95.3",
     "@splinetool/react-spline": "^4.1.0",
     "@splinetool/runtime": "^2.0.66",

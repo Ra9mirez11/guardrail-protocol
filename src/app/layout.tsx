@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { SolanaWalletProvider } from '@/components/SolanaWalletProvider';
 
 export const metadata: Metadata = {
   title: 'GuardRail | Zero-Trust Solana & Token-2022 Security Engine',
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen bg-[#050608] text-[#f3f5f8] aurora-bg antialiased selection:bg-[#00ffa3] selection:text-black">
-        {children}
+        <SolanaWalletProvider>{children}</SolanaWalletProvider>
       </body>
     </html>
   );
