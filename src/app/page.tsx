@@ -31,6 +31,7 @@ import { TiltCard } from '@/components/ui/TiltCard';
 import { BorderBeam } from '@/components/ui/BorderBeam';
 import { HoloGauge } from '@/components/ui/HoloGauge';
 import { BackgroundBeams } from '@/components/ui/BackgroundBeams';
+import { MarqueeTicker } from '@/components/ui/Marquee';
 import { EncryptedText } from '@/components/ui/encrypted-text';
 
 export default function Home() {
@@ -149,7 +150,7 @@ export default function Home() {
               text="PRE-EXECUTION FIREWALL"
               encryptedClassName="text-emerald-500/40 font-mono"
               revealedClassName="bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent"
-              revealDelayMs={40}
+              revealDelayMs={85}
             />
             <br />
             <span className="inline-block mt-1">
@@ -157,7 +158,7 @@ export default function Home() {
                 text="FOR SOLANA TOKENS"
                 encryptedClassName="text-cyan-500/40 font-mono"
                 revealedClassName="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(16,185,129,0.4)]"
-                revealDelayMs={55}
+                revealDelayMs={110}
               />
             </span>
           </h1>
@@ -211,66 +212,44 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* LIVE TOKEN FEED STREAM (TRADING TERMINAL TICKER) */}
-      <section className="max-w-7xl mx-auto px-6 py-4">
-        <div className="p-4 rounded-3xl bg-[#070912]/70 backdrop-blur-xl border border-white/[0.07] shadow-2xl space-y-3">
-          <div className="flex items-center justify-between px-2">
+      {/* COMPACT INFINITE MARQUEE RADAR (DOZENS OF REAL TOKENS) */}
+      <section className="max-w-7xl mx-auto px-6 py-2">
+        <div className="p-3.5 rounded-2xl bg-[#060810]/70 backdrop-blur-xl border border-white/[0.07] shadow-2xl space-y-2.5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-1">
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-white uppercase tracking-wider">
-              <Radio className="w-4 h-4 text-emerald-400 animate-pulse" />
-              <span>Real-Time Market Radar</span>
+              <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+              <span>Real-Time Market Stream</span>
+              <span className="text-[10px] text-slate-400 font-normal lowercase">(hover to pause • click to audit)</span>
             </div>
             {/* Filter Tabs */}
-            <div className="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/[0.06] text-xs font-mono">
+            <div className="flex items-center gap-1 bg-black/50 p-1 rounded-xl border border-white/[0.06] text-xs font-mono">
               <button
                 onClick={() => setActiveTab('TOKEN22')}
-                className={`px-3 py-1 rounded-lg transition-all font-semibold ${activeTab === 'TOKEN22' ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20' : 'text-slate-400 hover:text-white'}`}
+                className={`px-3 py-1 rounded-lg transition-all font-semibold text-[11px] ${activeTab === 'TOKEN22' ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20' : 'text-slate-400 hover:text-white'}`}
               >
                 TOKEN-2022
               </button>
               <button
                 onClick={() => setActiveTab('TOP')}
-                className={`px-3 py-1 rounded-lg transition-all font-semibold ${activeTab === 'TOP' ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20' : 'text-slate-400 hover:text-white'}`}
+                className={`px-3 py-1 rounded-lg transition-all font-semibold text-[11px] ${activeTab === 'TOP' ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20' : 'text-slate-400 hover:text-white'}`}
               >
                 TOP VOLUME
               </button>
               <button
                 onClick={() => setActiveTab('NEW')}
-                className={`px-3 py-1 rounded-lg transition-all font-semibold ${activeTab === 'NEW' ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20' : 'text-slate-400 hover:text-white'}`}
+                className={`px-3 py-1 rounded-lg transition-all font-semibold text-[11px] ${activeTab === 'NEW' ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20' : 'text-slate-400 hover:text-white'}`}
               >
                 TRENDING
               </button>
             </div>
           </div>
 
-          {/* Grid of Tokens with 1-Click Auto-Audit */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {activeTokensList.map((token) => (
-              <div
-                key={token.mint}
-                onClick={() => handleScan(token.mint)}
-                className={`p-3 rounded-2xl border transition-all cursor-pointer group flex flex-col justify-between ${
-                  mintInput === token.mint 
-                    ? 'bg-emerald-500/10 border-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.2)]' 
-                    : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05] hover:border-emerald-400/40'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-sm text-white group-hover:text-emerald-400 transition-colors">
-                    {token.symbol}
-                  </span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/50 text-slate-400 border border-white/[0.06]">
-                    {token.standard}
-                  </span>
-                </div>
-                <div className="flex items-baseline justify-between mt-2 text-xs font-mono">
-                  <span className="text-slate-300 font-semibold">{token.price}</span>
-                  <span className={token.isPositive ? 'text-emerald-400' : 'text-rose-400'}>
-                    {token.change24h}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Infinite Smooth Flowing Stream */}
+          <MarqueeTicker 
+            tokens={activeTokensList} 
+            selectedMint={mintInput} 
+            onSelectToken={(mint) => handleScan(mint)} 
+          />
         </div>
       </section>
 
