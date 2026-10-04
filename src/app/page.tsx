@@ -533,7 +533,7 @@ export default function Home() {
                   <ForensicTlvCard tlv={report.tlvInspection} />
                 </div>
                 <div className="lg:col-span-6">
-                  <SimulatorCard simulation={report.simulation} />
+                  <SimulatorCard simulation={report.simulation} mint={report.mint} />
                 </div>
               </div>
 
