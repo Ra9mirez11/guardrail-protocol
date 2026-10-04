@@ -15,29 +15,26 @@ import {
   Cpu, 
   Zap,
   RefreshCw,
-  TrendingUp,
   Radio,
-  Layers,
   ArrowUpRight,
   Copy,
   Eye,
-  SlidersHorizontal,
-  Flame,
-  Activity
+  Activity,
+  Loader2
 } from 'lucide-react';
 import { SecurityAuditReport } from '@/lib/types';
-import { TOP_TRADED_TOKENS, TOKEN_2022_RADAR, NEW_RADAR_MINTS, TrackedToken } from '@/lib/tokenDirectory';
+import { TOP_TRADED_TOKENS, TOKEN_2022_RADAR, NEW_RADAR_MINTS } from '@/lib/tokenDirectory';
 
 export default function Home() {
   const [mintInput, setMintInput] = useState('CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo');
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<SecurityAuditReport | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'TOP' | 'TOKEN22' | 'NEW'>('TOKEN22');
+  const [activeTab, setActiveTab] = useState<'TOKEN22' | 'TOP' | 'NEW'>('TOKEN22');
   const [copiedBlink, setCopiedBlink] = useState(false);
 
-  // Auto-scan default Token-2022 on load
   useEffect(() => {
+    // Initial scan on mount
     handleScan('CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo');
   }, []);
 
@@ -66,28 +63,28 @@ export default function Home() {
     }
   };
 
-  const getRiskBadge = (level: string) => {
+  const getRiskBadge = (level?: string) => {
     switch (level) {
       case 'SAFE':
         return {
-          bg: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+          bg: 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400',
           gaugeBg: 'text-emerald-400',
-          glow: 'shadow-[0_0_30px_rgba(16,185,129,0.15)]',
+          glow: 'shadow-[0_0_30px_rgba(16,185,129,0.2)]',
           label: 'SAFE & VERIFIED'
         };
       case 'WARNING':
         return {
-          bg: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
+          bg: 'bg-amber-500/10 border-amber-500/40 text-amber-400',
           gaugeBg: 'text-amber-400',
-          glow: 'shadow-[0_0_30px_rgba(245,158,11,0.15)]',
+          glow: 'shadow-[0_0_30px_rgba(245,158,11,0.2)]',
           label: 'WARNING DETECTED'
         };
       case 'DANGER':
       case 'CRITICAL':
         return {
-          bg: 'bg-rose-500/10 border-rose-500/30 text-rose-400',
+          bg: 'bg-rose-500/10 border-rose-500/40 text-rose-400',
           gaugeBg: 'text-rose-400',
-          glow: 'shadow-[0_0_30px_rgba(244,63,94,0.2)]',
+          glow: 'shadow-[0_0_30px_rgba(244,63,94,0.25)]',
           label: 'HIGH THREAT / HONEYPOT'
         };
       default:
@@ -95,15 +92,15 @@ export default function Home() {
           bg: 'bg-gray-800 border-gray-700 text-gray-400',
           gaugeBg: 'text-gray-400',
           glow: '',
-          label: 'UNKNOWN'
+          label: 'SCANNING...'
         };
     }
   };
 
-  const activeTokensList = activeTab === 'TOP' 
-    ? TOP_TRADED_TOKENS 
-    : activeTab === 'TOKEN22' 
-      ? TOKEN_2022_RADAR 
+  const activeTokensList = activeTab === 'TOKEN22' 
+    ? TOKEN_2022_RADAR 
+    : activeTab === 'TOP' 
+      ? TOP_TRADED_TOKENS 
       : NEW_RADAR_MINTS;
 
   const currentBadge = report ? getRiskBadge(report.riskLevel) : getRiskBadge('SAFE');
@@ -111,7 +108,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#07080b] text-[#f2f4f8] selection:bg-[#00ffa3] selection:text-black">
       {/* Top Cyber Navigation Bar */}
-      <header className="border-b border-white/5 bg-[#090b10]/80 backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-white/5 bg-[#090b10]/90 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-[1600px] mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Logo & Branding */}
           <div className="flex items-center gap-3.5">
@@ -196,12 +193,12 @@ export default function Home() {
                   onClick={() => handleScan(t.mint)}
                   className={`p-3 rounded-xl border transition-all cursor-pointer group flex items-center justify-between ${
                     mintInput === t.mint 
-                      ? 'bg-[#00ffa3]/10 border-[#00ffa3]/40 shadow-[0_0_15px_rgba(0,255,163,0.1)]' 
-                      : 'bg-white/[0.02] border-white/5 hover:border-[#00ffa3]/30 hover:bg-white/[0.04]'
+                      ? 'bg-[#00ffa3]/10 border-[#00ffa3]/50 shadow-[0_0_15px_rgba(0,255,163,0.15)]' 
+                      : 'bg-white/[0.02] border-white/5 hover:border-[#00ffa3]/40 hover:bg-white/[0.05]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center font-bold font-mono text-xs text-white group-hover:border-[#00ffa3]/50 transition-colors">
+                    <div className="w-9 h-9 rounded-lg bg-black/60 border border-white/10 flex items-center justify-center font-bold font-mono text-xs text-white group-hover:border-[#00ffa3]/50 transition-colors">
                       {t.symbol.slice(0, 3)}
                     </div>
                     <div>
@@ -220,7 +217,7 @@ export default function Home() {
                     <span className="inline-block text-[9px] font-mono px-1.5 py-0.5 rounded border border-white/10 bg-black/40 text-gray-300">
                       {t.standard}
                     </span>
-                    <div className="text-[10px] font-mono text-gray-500 mt-1 flex items-center justify-end gap-1 group-hover:text-[#00ffa3] transition-colors">
+                    <div className="text-[10px] font-mono text-gray-400 mt-1 flex items-center justify-end gap-1 group-hover:text-[#00ffa3] transition-colors">
                       <span>Audit</span>
                       <ArrowUpRight className="w-3 h-3" />
                     </div>
@@ -268,7 +265,7 @@ export default function Home() {
                 >
                   {loading ? (
                     <>
-                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       <span>INSPECTING BYTES...</span>
                     </>
                   ) : (
@@ -282,8 +279,20 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Loading Skeleton */}
+          {loading && (
+            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] animate-pulse space-y-4 font-mono text-xs">
+              <div className="flex items-center gap-3 text-[#00ffa3]">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span className="font-bold tracking-wider">FETCHING ON-CHAIN TLV BYTES & SIMULATING INVARIANTS...</span>
+              </div>
+              <div className="h-4 bg-white/5 rounded w-3/4"></div>
+              <div className="h-4 bg-white/5 rounded w-1/2"></div>
+            </div>
+          )}
+
           {/* Error Message */}
-          {error && (
+          {error && !loading && (
             <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center gap-3 font-mono text-xs">
               <AlertTriangle className="w-5 h-5 flex-shrink-0" />
               <span>{error}</span>
@@ -291,7 +300,7 @@ export default function Home() {
           )}
 
           {/* Detailed Audit Report */}
-          {report && (
+          {report && !loading && (
             <div className="space-y-6 animate-in fade-in duration-300">
               
               {/* Verdict & Score Banner */}
