@@ -1,4 +1,5 @@
-export type RiskLevel = 'SAFE' | 'WARNING' | 'DANGER' | 'CRITICAL';
+﻿export type RiskLevel = 'SAFE' | 'WARNING' | 'DANGER' | 'CRITICAL';
+export type SecurityCategory = 'VERIFIED_SECURE' | 'INSTITUTIONAL_STABLE' | 'CENTRALIZED_GOVERNANCE' | 'TAX_WARNING' | 'HONEYPOT_RISK';
 
 export interface TokenExtensionAnalysis {
   hasTransferHook: boolean;
@@ -39,6 +40,8 @@ export interface SecurityAuditReport {
   analyzedAt: number;
   riskScore: number; // 0 (safest) to 100 (critical honeypot/scam)
   riskLevel: RiskLevel;
+  securityCategory: SecurityCategory;
+  categoryLabel: string;
   verdict: string;
   standard: StandardSecurityAnalysis;
   extensions: TokenExtensionAnalysis;

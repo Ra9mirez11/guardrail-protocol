@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -80,7 +80,8 @@ export default function Home() {
 
   const isSafe = report?.riskLevel === 'SAFE';
   const isWarn = report?.riskLevel === 'WARNING';
-  const isDanger = report?.riskLevel === 'DANGER' || report?.riskLevel === 'CRITICAL';
+  const isCritical = report?.riskLevel === 'CRITICAL';
+  const isInstitutional = report?.securityCategory === 'INSTITUTIONAL_STABLE';
 
   return (
     <div className="relative min-h-screen text-slate-100 overflow-x-hidden selection:bg-emerald-400 selection:text-black font-sans pb-20">
@@ -101,43 +102,48 @@ export default function Home() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-xl tracking-tight text-white">GUARDRAIL</span>
+                <span className="font-mono text-lg font-black tracking-widest bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                  GUARDRAIL
+                </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-mono tracking-wide">Zero-Trust Pre-Execution Firewall</p>
+              <p className="text-[10px] font-mono tracking-wider text-emerald-400 font-semibold">
+                PRE-EXECUTION FIREWALL
+              </p>
             </div>
           </div>
 
-          {/* Network Badges */}
-          <div className="hidden md:flex items-center gap-4 text-xs font-mono">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] shadow-inner">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span className="text-slate-400">Network:</span>
-              <span className="text-white font-semibold">Mainnet-Beta</span>
+          {/* Quick Metrics / Network Status */}
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>MAINNET RADAR LIVE</span>
             </div>
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] shadow-inner">
-              <Lock className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-slate-300 font-semibold">100% Non-Custodial</span>
-            </div>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-mono font-medium text-slate-300 transition-colors flex items-center gap-2"
+            >
+              <span>DOCS</span>
+              <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+            </a>
           </div>
         </div>
       </header>
 
-      {/* CINEMATIC HERO SECTION */}
+      {/* HERO SECTION */}
       <section className="relative max-w-7xl mx-auto px-6 pt-16 pb-12 text-center space-y-8">
-
-
-        {/* Massive Metallic Heading */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="max-w-4xl mx-auto space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="space-y-4 max-w-4xl mx-auto"
         >
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-[1.08] drop-shadow-sm">
-            <EncryptedText
-              text="PRE-EXECUTION FIREWALL"
-              encryptedClassName="text-emerald-500/40 font-mono"
-              revealedClassName="bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent"
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]">
+            <EncryptedText 
+              text="ZERO-TRUST FIREWALL" 
+              encryptedClassName="text-emerald-500/50 font-mono"
+              revealedClassName="text-white drop-shadow-[0_0_35px_rgba(255,255,255,0.2)]"
               revealDelayMs={85}
             />
             <br />
@@ -207,7 +213,7 @@ export default function Home() {
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-white uppercase tracking-wider">
               <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
               <span>Real-Time Market Stream</span>
-              <span className="text-[10px] text-slate-400 font-normal lowercase">(hover to pause • click to audit)</span>
+              <span className="text-[10px] text-slate-400 font-normal lowercase">(hover to pause - click to audit)</span>
             </div>
             {/* Filter Tabs */}
             <div className="flex items-center gap-1 bg-black/50 p-1 rounded-xl border border-white/[0.06] text-xs font-mono">
@@ -282,8 +288,8 @@ export default function Home() {
                     </span>
                   </div>
 
-                  <h2 className="text-3xl font-black text-white tracking-tight leading-tight">
-                    {isSafe ? 'VERIFIED SECURE CONTRACT' : isWarn ? 'ELEVATED TAX WARNING' : 'CRITICAL THREAT / HONEYPOT'}
+                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+                    {report.categoryLabel || (isSafe ? 'VERIFIED SECURE CONTRACT' : isWarn ? 'ELEVATED RISK NOTICE' : 'CRITICAL THREAT / HONEYPOT')}
                   </h2>
 
                   <p className="text-sm text-slate-300 leading-relaxed font-sans">
@@ -313,13 +319,15 @@ export default function Home() {
                       <Zap className="w-4 h-4 fill-emerald-400" />
                       Jupiter Safe-Route Available
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
-                      0% HONEYPOT
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${isSafe ? 'bg-emerald-400/20 text-emerald-300 border-emerald-400/30' : isWarn ? 'bg-amber-400/20 text-amber-300 border-amber-400/30' : 'bg-rose-400/20 text-rose-300 border-rose-400/30'}`}>
+                      {isCritical ? 'HONEYPOT DETECTED' : '0% HONEYPOT'}
                     </span>
                   </div>
                   <h3 className="text-lg font-bold text-white">Instant Liquidity Routing</h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    Contract invariants cleared. You can trade this token safely with auto-routed slippage protection via Jupiter.
+                    {isCritical 
+                      ? 'Warning: Token invariants failed safety thresholds. Trading this asset carries severe loss risk.'
+                      : 'Contract invariants cleared. You can trade this token safely with auto-routed slippage protection via Jupiter.'}
                   </p>
                 </div>
 
@@ -327,9 +335,9 @@ export default function Home() {
                   href={`https://jup.ag/swap/SOL-${report.mint}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-6 w-full py-4 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-98"
+                  className={`mt-6 w-full py-4 rounded-xl font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-98 ${isCritical ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/30' : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/30'}`}
                 >
-                  <span>EXECUTE SAFE-SWAP ON JUPITER</span>
+                  <span>{isCritical ? 'PROCEED WITH EXTREME CAUTION' : 'EXECUTE SAFE-SWAP ON JUPITER'}</span>
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </TiltCard>
@@ -448,8 +456,8 @@ export default function Home() {
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-slate-400 uppercase">Freeze Authority</span>
                   {report.standard.isFreezable ? (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">
-                      ENABLED
+                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${isInstitutional ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'bg-amber-500/20 text-amber-400 border-amber-500/40'}`}>
+                      {isInstitutional ? 'COMPLIANCE KEY' : 'ENABLED'}
                     </span>
                   ) : (
                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
@@ -458,11 +466,15 @@ export default function Home() {
                   )}
                 </div>
                 <div className="text-xl font-bold text-white">
-                  {report.standard.isFreezable ? 'Wallets Freezable' : 'Permanently Revoked'}
+                  {report.standard.isFreezable 
+                    ? (isInstitutional ? 'Institutional Compliance' : 'Wallets Freezable')
+                    : 'Permanently Revoked'}
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   {report.standard.isFreezable 
-                    ? 'Creator retains power to freeze recipient token accounts at will.' 
+                    ? (isInstitutional 
+                        ? 'Official regulatory/compliance freeze control retained by issuer (Circle/Tether).'
+                        : 'Creator retains power to freeze recipient token accounts at will.')
                     : 'Freeze key is permanently burned. Token transfers cannot be halted.'}
                 </p>
               </TiltCard>
@@ -476,10 +488,10 @@ export default function Home() {
       {/* Ultra-Clean Footer */}
       <footer className="border-t border-white/[0.06] mt-20 py-8 text-xs font-mono text-slate-500">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>GUARDRAIL PROTOCOL © 2026 | BUILT FOR COLOSSEUM CRYPTO WORLD&apos;S FAIR & SOLANACZE TRACK</div>
+          <div>GUARDRAIL PROTOCOL - 2026 | BUILT FOR COLOSSEUM CRYPTO WORLD&apos;S FAIR & SOLANACZE TRACK</div>
           <div className="flex items-center gap-4 text-slate-400">
             <span>ZERO-KNOWLEDGE PIPELINE</span>
-            <span>•</span>
+            <span>-</span>
             <span>100% NON-CUSTODIAL</span>
           </div>
         </div>
