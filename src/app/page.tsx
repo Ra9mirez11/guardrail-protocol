@@ -26,9 +26,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   const presets = [
-    { label: 'BONK (SPL)', mint: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263' },
-    { label: 'USDC (SPL)', mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' },
-    { label: 'WIF (SPL)', mint: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm' },
+    { label: 'BERN (Token-2022 Tax 2.69%)', mint: 'CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo' },
+    { label: 'BONK (Standard SPL)', mint: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263' },
+    { label: 'USDC (Standard SPL)', mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' },
   ];
 
   const handleScan = async (targetMint?: string) => {
