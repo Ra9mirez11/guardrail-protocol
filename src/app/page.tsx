@@ -31,6 +31,7 @@ import { TiltCard } from '@/components/ui/TiltCard';
 import { BorderBeam } from '@/components/ui/BorderBeam';
 import { HoloGauge } from '@/components/ui/HoloGauge';
 import { BackgroundBeams } from '@/components/ui/BackgroundBeams';
+import { EncryptedText } from '@/components/ui/encrypted-text';
 
 export default function Home() {
   const [mintInput, setMintInput] = useState('CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo');
@@ -143,10 +144,21 @@ export default function Home() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="max-w-4xl mx-auto space-y-4"
         >
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-[1.08] bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent drop-shadow-sm">
-            PRE-EXECUTION FIREWALL <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(16,185,129,0.4)]">
-              FOR SOLANA TOKENS
+          <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-[1.08] drop-shadow-sm">
+            <EncryptedText
+              text="PRE-EXECUTION FIREWALL"
+              encryptedClassName="text-emerald-500/40 font-mono"
+              revealedClassName="bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent"
+              revealDelayMs={40}
+            />
+            <br />
+            <span className="inline-block mt-1">
+              <EncryptedText
+                text="FOR SOLANA TOKENS"
+                encryptedClassName="text-cyan-500/40 font-mono"
+                revealedClassName="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(16,185,129,0.4)]"
+                revealDelayMs={55}
+              />
             </span>
           </h1>
           <p className="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto font-normal leading-relaxed">
