@@ -1,11 +1,17 @@
 ﻿'use client';
 
-import React, { useState } from 'react';
-import { Terminal, Copy, Check, X, ShieldAlert, Code, Cpu } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { Terminal, Copy, Check, X } from 'lucide-react';
 
 export function SdkModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const snippets = [
     {
@@ -67,6 +73,17 @@ export function SdkModal() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  if (!mounted) {
+    return (
+      <button
+        className="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-xs font-mono font-medium text-cyan-300"
+      >
+        <Terminal className="w-3.5 h-3.5 inline mr-1.5 text-cyan-400" />
+        <span>DEVELOPER SDK & CLI</span>
+      </button>
+    );
+  }
+
   return (
     <>
       <button
@@ -78,17 +95,23 @@ export function SdkModal() {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-3xl bg-[#070914] border border-cyan-500/40 shadow-[0_0_80px_rgba(6,182,212,0.25)] font-mono text-left overflow-hidden">
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md"
+          onClick={() => setIsOpen(false)}
+        >
+          <div 
+            className="relative w-full max-w-2xl max-h-[85vh] my-auto flex flex-col rounded-3xl bg-[#070914] border border-cyan-500/50 shadow-[0_0_100px_rgba(6,182,212,0.35)] font-mono text-left overflow-hidden animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
             
             {/* Modal Header */}
-            <div className="p-6 border-b border-white/[0.08] flex items-center justify-between flex-shrink-0 bg-white/[0.02]">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+            <div className="p-5 sm:p-6 border-b border-white/[0.08] flex items-center justify-between flex-shrink-0 bg-white/[0.02]">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
                   <Terminal className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white tracking-wider">GUARDRAIL INTEGRATION SDK & CLI</h3>
+                  <h3 className="text-sm sm:text-base font-bold text-white tracking-wider">GUARDRAIL INTEGRATION SDK & CLI</h3>
                   <p className="text-[11px] text-slate-400 font-sans mt-0.5">
                     Integrate zero-trust pre-execution firewall into your DEX, Telegram trading bot, or CI/CD pipeline.
                   </p>
@@ -103,7 +126,7 @@ export function SdkModal() {
             </div>
 
             {/* Modal Scrollable Body */}
-            <div className="p-6 space-y-5 overflow-y-auto max-h-[60vh]">
+            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto max-h-[55vh]">
               {snippets.map((s, idx) => (
                 <div key={idx} className="rounded-2xl bg-black/80 border border-white/[0.08] overflow-hidden shadow-inner">
                   <div className="px-4 py-2.5 bg-white/[0.03] border-b border-white/[0.06] flex items-center justify-between">

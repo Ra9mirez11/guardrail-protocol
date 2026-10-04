@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,6 +34,7 @@ import { SecurityAuditReport } from '@/lib/types';
 import { TOP_TRADED_TOKENS, TOKEN_2022_RADAR, NEW_RADAR_MINTS, EXPLOIT_VECTORS_RADAR, TrackedToken } from '@/lib/tokenDirectory';
 import { AuditExportButton } from '@/components/AuditExportButton';
 import { SdkModal } from '@/components/SdkModal';
+import { WalletButtonWrapper } from '@/components/WalletButtonWrapper';
 import { TiltCard } from '@/components/ui/TiltCard';
 import { BorderBeam } from '@/components/ui/BorderBeam';
 import { HoloGauge } from '@/components/ui/HoloGauge';
@@ -44,7 +45,7 @@ import { ForensicTlvCard } from '@/components/ForensicTlvCard';
 import { SimulatorCard } from '@/components/SimulatorCard';
 import { AttestationBadge } from '@/components/AttestationBadge';
 import { IntroSplash } from '@/components/IntroSplash';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+// WalletMultiButton handled by SSR-safe WalletButtonWrapper
 
 export default function Home() {
   const [mintInput, setMintInput] = useState('CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo');
@@ -130,7 +131,7 @@ export default function Home() {
           {/* Quick Metrics / Network Status */}
           <div className="flex items-center gap-3">
             <SdkModal />
-            <WalletMultiButton className="!bg-emerald-400 !text-black !font-mono !text-xs !font-bold !rounded-xl !h-9 !px-4 hover:!bg-emerald-300 transition-all !shadow-[0_0_20px_rgba(16,185,129,0.3)]" />
+            <WalletButtonWrapper />
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>MAINNET RADAR LIVE</span>
@@ -357,29 +358,23 @@ export default function Home() {
                   </div>
                 </div>
 
+                {/* Cryptographic Audit Proof & Certificate Export */}
                 <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between">
-                    <span className="text-[11px] font-mono text-slate-400">CRYPTOGRAPHIC AUDIT PROOF</span>
-                    <AuditExportButton report={report} />
+                  <span className="text-[11px] font-mono text-slate-400">CRYPTOGRAPHIC AUDIT PROOF</span>
+                  <AuditExportButton report={report} />
+                </div>
+
+                {/* On-Chain CPI Invariant Firewall Badge */}
+                <div className="mt-3 p-3 rounded-2xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs font-mono">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-slate-300 font-semibold">ANCHOR CPI FIREWALL PROXY:</span>
+                    <span className="text-emerald-400 font-bold">GUARD_PRE_EXECUTION_SWAP ACTIVE</span>
                   </div>
-                  {/* On-Chain CPI Invariant Firewall Badge */}
-                  <div className="mt-4 p-3 rounded-2xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs font-mono">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-slate-300 font-semibold">ANCHOR CPI FIREWALL PROXY:</span>
-                      <span className="text-emerald-400 font-bold">GUARD_PRE_EXECUTION_SWAP ACTIVE</span>
-                    </div>
-                    <span className="text-[10px] text-slate-500">MAX_TAX: 500 BPS</span>
-                  </div>
-                  {/* On-Chain CPI Invariant Firewall Badge */}
-                  <div className="mt-4 p-3 rounded-2xl bg-black/40 border border-white/[0.06] flex items-center justify-between text-xs font-mono">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-slate-300 font-semibold">ANCHOR CPI FIREWALL PROXY:</span>
-                      <span className="text-emerald-400 font-bold">GUARD_PRE_EXECUTION_SWAP ACTIVE</span>
-                    </div>
-                    <span className="text-[10px] text-slate-500">MAX_TAX: 500 BPS</span>
-                  </div>
-                  <AttestationBadge proof={report.attestationProof} mint={report.mint} />
+                  <span className="text-[10px] text-slate-500">MAX_TAX: 500 BPS</span>
+                </div>
+
+                <AttestationBadge proof={report.attestationProof} mint={report.mint} />
               </TiltCard>
 
               {/* BENTO ITEM 2: JUPITER SAFE-ROUTE & TWITTER BLINK (Col 5) */}
@@ -405,7 +400,7 @@ export default function Home() {
                   </div>
 
                   <a
-                    href={`https://jup.ag/swap/SOL-${report?.mint || 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'}`}
+                    href={`https://jup.ag/swap/SOL-${report.mint}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`mt-6 w-full py-4 rounded-xl font-extrabold text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-98 ${isCritical ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/30' : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/30'}`}
