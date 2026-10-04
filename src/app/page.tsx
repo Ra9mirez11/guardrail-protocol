@@ -346,6 +346,8 @@ export default function Home() {
                     <HoloGauge score={report.riskScore} />
                   </div>
                 </div>
+
+                <AttestationBadge proof={report.attestationProof} />
               </TiltCard>
 
               {/* BENTO ITEM 2: JUPITER SAFE-ROUTE & TWITTER BLINK (Col 5) */}
@@ -518,6 +520,16 @@ export default function Home() {
                   </p>
                 </TiltCard>
 
+              </div>
+
+              {/* BENTO ROW 3: DECOMPILED TLV BYTECODE & ZERO-RISK TX SIMULATOR */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-6">
+                  <ForensicTlvCard tlv={report.tlvInspection} />
+                </div>
+                <div className="lg:col-span-6">
+                  <SimulatorCard simulation={report.simulation} />
+                </div>
               </div>
 
             </div>
