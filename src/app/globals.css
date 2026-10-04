@@ -63,3 +63,26 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 255, 163, 0.4);
 }
+
+/* Nastavení velikosti a barvy ikonky kybernetického oka strážce */
+.cyber-eye {
+  width: 18px;
+  height: 18px;
+  color: #00ffaa;
+  filter: drop-shadow(0 0 5px rgba(0, 255, 170, 0.6));
+  animation: sentinelPulse 2.5s infinite ease-in-out;
+}
+
+/* Sci-fi efekt pulzování "strážce" */
+@keyframes sentinelPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 3px rgba(0, 255, 170, 0.4));
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 170, 0.9));
+  }
+}

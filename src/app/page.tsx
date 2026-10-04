@@ -127,14 +127,27 @@ export default function Home() {
 
       {/* CINEMATIC HERO SECTION */}
       <section className="relative max-w-7xl mx-auto px-6 pt-16 pb-12 text-center space-y-8">
-        {/* Glow pill badge */}
+        {/* Glow pill badge with Cyber Eye Sentinel */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono shadow-[0_0_20px_rgba(16,185,129,0.2)]"
         >
-          <Sparkles className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
+          {/* Cyber Eye SVG Sentinel */}
+          <svg 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            className="cyber-eye flex-shrink-0"
+          >
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+            <circle cx="12" cy="12" r="3" fill="#00ffaa" fillOpacity="0.4" />
+            <circle cx="12" cy="12" r="1.5" fill="#00ffaa" />
+          </svg>
           <span>Next-Gen Token-2022 Honeypot & Transfer Hook Sentinel</span>
         </motion.div>
 
