@@ -32,7 +32,7 @@ import { BorderBeam } from '@/components/ui/BorderBeam';
 import { HoloGauge } from '@/components/ui/HoloGauge';
 import { BackgroundBeams } from '@/components/ui/BackgroundBeams';
 import { MarqueeTicker } from '@/components/ui/Marquee';
-import { SentinelEye } from '@/components/ui/SentinelEye';
+import { SplineEyeBot } from '@/components/ui/SplineEyeBot';
 import { EncryptedText } from '@/components/ui/encrypted-text';
 
 export default function Home() {
@@ -135,7 +135,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="inline-block"
         >
-          <SentinelEye />
+          <SplineEyeBot />
         </motion.div>
 
         {/* Massive Metallic Heading */}
