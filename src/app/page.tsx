@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  ShieldAlert, 
   ShieldCheck, 
+  ShieldAlert, 
   AlertTriangle, 
-  Terminal, 
   Search, 
   ExternalLink, 
   Lock, 
@@ -14,13 +13,14 @@ import {
   Share2, 
   Cpu, 
   Zap,
-  RefreshCw,
   Radio,
   ArrowUpRight,
   Copy,
-  Eye,
   Activity,
-  Loader2
+  Loader2,
+  Sparkles,
+  Layers,
+  ChevronRight
 } from 'lucide-react';
 import { SecurityAuditReport } from '@/lib/types';
 import { TOP_TRADED_TOKENS, TOKEN_2022_RADAR, NEW_RADAR_MINTS } from '@/lib/tokenDirectory';
@@ -34,7 +34,7 @@ export default function Home() {
   const [copiedBlink, setCopiedBlink] = useState(false);
 
   useEffect(() => {
-    // Initial scan on mount
+    // Initial scan on load
     handleScan('CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo');
   }, []);
 
@@ -63,533 +63,406 @@ export default function Home() {
     }
   };
 
-  const getRiskBadge = (level?: string) => {
-    switch (level) {
-      case 'SAFE':
-        return {
-          bg: 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400',
-          gaugeBg: 'text-emerald-400',
-          glow: 'shadow-[0_0_30px_rgba(16,185,129,0.2)]',
-          label: 'SAFE & VERIFIED'
-        };
-      case 'WARNING':
-        return {
-          bg: 'bg-amber-500/10 border-amber-500/40 text-amber-400',
-          gaugeBg: 'text-amber-400',
-          glow: 'shadow-[0_0_30px_rgba(245,158,11,0.2)]',
-          label: 'WARNING DETECTED'
-        };
-      case 'DANGER':
-      case 'CRITICAL':
-        return {
-          bg: 'bg-rose-500/10 border-rose-500/40 text-rose-400',
-          gaugeBg: 'text-rose-400',
-          glow: 'shadow-[0_0_30px_rgba(244,63,94,0.25)]',
-          label: 'HIGH THREAT / HONEYPOT'
-        };
-      default:
-        return {
-          bg: 'bg-gray-800 border-gray-700 text-gray-400',
-          gaugeBg: 'text-gray-400',
-          glow: '',
-          label: 'SCANNING...'
-        };
-    }
-  };
-
   const activeTokensList = activeTab === 'TOKEN22' 
     ? TOKEN_2022_RADAR 
     : activeTab === 'TOP' 
       ? TOP_TRADED_TOKENS 
       : NEW_RADAR_MINTS;
 
-  const currentBadge = report ? getRiskBadge(report.riskLevel) : getRiskBadge('SAFE');
+  const isSafe = report?.riskLevel === 'SAFE';
+  const isWarn = report?.riskLevel === 'WARNING';
+  const isDanger = report?.riskLevel === 'DANGER' || report?.riskLevel === 'CRITICAL';
 
   return (
-    <div className="min-h-screen bg-[#07080b] text-[#f2f4f8] selection:bg-[#00ffa3] selection:text-black">
-      {/* Top Cyber Navigation Bar */}
-      <header className="border-b border-white/5 bg-[#090b10]/90 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-[1600px] mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Logo & Branding */}
+    <div className="min-h-screen text-slate-100 flex flex-col justify-between">
+      {/* Top Navigation */}
+      <header className="border-b border-white/[0.08] bg-[#07090e]/70 backdrop-blur-2xl sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          {/* Logo & Brand */}
           <div className="flex items-center gap-3.5">
-            <div className="relative p-2 rounded-xl bg-gradient-to-br from-[#00ffa3]/20 via-[#00ffa3]/5 to-transparent border border-[#00ffa3]/30 shadow-[0_0_20px_rgba(0,255,163,0.2)]">
-              <ShieldCheck className="w-6 h-6 text-[#00ffa3]" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00ffa3] via-[#00ffa3]/20 to-transparent p-px shadow-[0_0_25px_rgba(0,255,163,0.3)]">
+              <div className="w-full h-full bg-[#090c14] rounded-2xl flex items-center justify-center">
+                <ShieldCheck className="w-5 h-5 text-[#00ffa3]" />
+              </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-black tracking-wider text-white">GUARDRAIL</span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#00ffa3]/10 text-[#00ffa3] border border-[#00ffa3]/30">
-                  PRO V1.0
+                <span className="font-bold text-lg tracking-tight text-white">GuardRail</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#00ffa3]/10 text-[#00ffa3] border border-[#00ffa3]/30">
+                  Protocol
                 </span>
               </div>
-              <p className="text-[11px] text-gray-400 font-mono">Solana & Token-2022 Pre-Execution Firewall</p>
+              <p className="text-xs text-slate-400 font-normal">Zero-Trust Pre-Execution Firewall for Solana</p>
             </div>
           </div>
 
-          {/* Live Network Metrics Header */}
-          <div className="hidden lg:flex items-center gap-6 text-xs font-mono">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/5">
+          {/* Network Indicators */}
+          <div className="hidden md:flex items-center gap-3 text-xs">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08]">
               <span className="w-2 h-2 rounded-full bg-[#00ffa3] animate-pulse"></span>
-              <span className="text-gray-400">Network:</span>
-              <span className="text-white font-semibold">Mainnet-Beta</span>
+              <span className="text-slate-400">Network:</span>
+              <span className="text-white font-medium">Mainnet-Beta</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/5">
-              <Activity className="w-3.5 h-3.5 text-[#00ffa3]" />
-              <span className="text-gray-400">TPS:</span>
-              <span className="text-white font-semibold">2,481</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/5">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08]">
               <Lock className="w-3.5 h-3.5 text-[#00ffa3]" />
-              <span className="text-gray-400">Architecture:</span>
-              <span className="text-white font-semibold">100% Non-Custodial</span>
+              <span className="text-slate-300 font-medium">Non-Custodial</span>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Terminal Grid (3-Column Layout) */}
-      <main className="max-w-[1600px] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Main Content Area */}
+      <main className="max-w-7xl mx-auto px-6 py-8 flex-1 w-full space-y-8">
         
-        {/* LEFT COLUMN: LIVE MARKET RADAR & 1-CLICK FEED (3.5 cols) */}
-        <section className="lg:col-span-4 xl:col-span-3.5 space-y-4">
-          <div className="p-4 rounded-2xl cyber-glass border border-white/10 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-white/5">
+        {/* Hero Search Section */}
+        <div className="relative rounded-3xl glass-panel p-8 overflow-hidden">
+          <div className="absolute -right-20 -top-20 w-80 h-80 bg-[#00ffa3]/10 rounded-full blur-3xl pointer-events-none animate-glow"></div>
+          <div className="max-w-3xl space-y-4 relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00ffa3]/10 border border-[#00ffa3]/20 text-[#00ffa3] text-xs font-medium">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Token-2022 & SPL Invariant Inspection Engine</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+              Pre-Flight Security Radar
+            </h1>
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              Analyze Token-2022 transfer hooks, hidden predatory fees, and honeypot traps on Solana in real time before signing.
+            </p>
+
+            {/* Search Input Bar */}
+            <div className="pt-2 flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={mintInput}
+                  onChange={(e) => setMintInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleScan()}
+                  placeholder="Enter Solana Token Mint Address (e.g., CKfatsP...)"
+                  className="w-full bg-[#0a0d14]/90 border border-white/[0.12] rounded-2xl px-5 py-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00ffa3] focus:ring-1 focus:ring-[#00ffa3] transition-all font-mono shadow-inner"
+                />
+              </div>
+              <button
+                onClick={() => handleScan()}
+                disabled={loading}
+                className="bg-[#00ffa3] hover:bg-[#00ffa3]/90 text-black font-semibold text-sm px-8 py-4 rounded-2xl flex items-center justify-center gap-2.5 transition-all shadow-[0_0_25px_rgba(0,255,163,0.35)] disabled:opacity-50 whitespace-nowrap active:scale-[0.98]"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Auditing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-4 h-4 fill-black" />
+                    <span>Run Deep Audit</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 2-Column Workspace Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* LEFT COLUMN: Curated Token Feed (4 cols) */}
+          <div className="lg:col-span-4 rounded-3xl glass-panel p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
               <div className="flex items-center gap-2">
                 <Radio className="w-4 h-4 text-[#00ffa3] animate-pulse" />
-                <h2 className="text-xs font-bold font-mono tracking-wider text-white uppercase">Live Token Feed</h2>
+                <h2 className="text-sm font-bold tracking-tight text-white uppercase">Live Token Feed</h2>
               </div>
-              <span className="text-[10px] font-mono text-[#00ffa3] bg-[#00ffa3]/10 px-2 py-0.5 rounded border border-[#00ffa3]/20">
-                1-CLICK AUDIT
+              <span className="text-[11px] font-medium text-[#00ffa3] bg-[#00ffa3]/10 px-2.5 py-1 rounded-full border border-[#00ffa3]/20">
+                1-Click Select
               </span>
             </div>
 
-            {/* Feed Tabs */}
-            <div className="grid grid-cols-3 gap-1 p-1 bg-black/40 rounded-xl border border-white/5 text-[11px] font-mono">
+            {/* Category Tabs */}
+            <div className="grid grid-cols-3 gap-1.5 p-1 bg-black/40 rounded-2xl border border-white/[0.06] text-xs">
               <button
                 onClick={() => setActiveTab('TOKEN22')}
-                className={`py-1.5 rounded-lg font-bold transition-all ${activeTab === 'TOKEN22' ? 'bg-[#00ffa3] text-black shadow-lg shadow-[#00ffa3]/20' : 'text-gray-400 hover:text-white'}`}
+                className={`py-2 rounded-xl font-medium transition-all ${activeTab === 'TOKEN22' ? 'bg-[#00ffa3] text-black shadow-md shadow-[#00ffa3]/20' : 'text-slate-400 hover:text-white'}`}
               >
-                TOKEN-2022
+                Token-2022
               </button>
               <button
                 onClick={() => setActiveTab('TOP')}
-                className={`py-1.5 rounded-lg font-bold transition-all ${activeTab === 'TOP' ? 'bg-[#00ffa3] text-black shadow-lg shadow-[#00ffa3]/20' : 'text-gray-400 hover:text-white'}`}
+                className={`py-2 rounded-xl font-medium transition-all ${activeTab === 'TOP' ? 'bg-[#00ffa3] text-black shadow-md shadow-[#00ffa3]/20' : 'text-slate-400 hover:text-white'}`}
               >
-                TOP VOLUME
+                Top Volume
               </button>
               <button
                 onClick={() => setActiveTab('NEW')}
-                className={`py-1.5 rounded-lg font-bold transition-all ${activeTab === 'NEW' ? 'bg-[#00ffa3] text-black shadow-lg shadow-[#00ffa3]/20' : 'text-gray-400 hover:text-white'}`}
+                className={`py-2 rounded-xl font-medium transition-all ${activeTab === 'NEW' ? 'bg-[#00ffa3] text-black shadow-md shadow-[#00ffa3]/20' : 'text-slate-400 hover:text-white'}`}
               >
-                RADAR MINTS
+                Trending
               </button>
             </div>
 
-            {/* Token List */}
-            <div className="space-y-2 max-h-[620px] overflow-y-auto pr-1">
-              {activeTokensList.map((t) => (
+            {/* Token List Cards */}
+            <div className="space-y-2.5">
+              {activeTokensList.map((token) => (
                 <div
-                  key={t.mint}
-                  onClick={() => handleScan(t.mint)}
-                  className={`p-3 rounded-xl border transition-all cursor-pointer group flex items-center justify-between ${
-                    mintInput === t.mint 
-                      ? 'bg-[#00ffa3]/10 border-[#00ffa3]/50 shadow-[0_0_15px_rgba(0,255,163,0.15)]' 
-                      : 'bg-white/[0.02] border-white/5 hover:border-[#00ffa3]/40 hover:bg-white/[0.05]'
+                  key={token.mint}
+                  onClick={() => handleScan(token.mint)}
+                  className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group ${
+                    mintInput === token.mint 
+                      ? 'glass-panel-active' 
+                      : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.15]'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-black/60 border border-white/10 flex items-center justify-center font-bold font-mono text-xs text-white group-hover:border-[#00ffa3]/50 transition-colors">
-                      {t.symbol.slice(0, 3)}
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-10 h-10 rounded-xl bg-black/60 border border-white/[0.08] flex items-center justify-center font-bold text-xs text-white group-hover:border-[#00ffa3]/50 transition-colors">
+                      {token.symbol.slice(0, 3)}
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-white group-hover:text-[#00ffa3] transition-colors">{t.symbol}</span>
-                        <span className="text-[10px] text-gray-500 truncate max-w-[80px]">{t.name}</span>
+                        <span className="text-sm font-bold text-white group-hover:text-[#00ffa3] transition-colors">
+                          {token.symbol}
+                        </span>
+                        <span className="text-xs text-slate-400">{token.name}</span>
                       </div>
-                      <div className="text-[11px] font-mono text-gray-400 flex items-center gap-2 mt-0.5">
-                        <span>{t.price}</span>
-                        <span className={t.isPositive ? 'text-emerald-400' : 'text-rose-400'}>{t.change24h}</span>
+                      <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5 font-medium">
+                        <span>{token.price}</span>
+                        <span className={token.isPositive ? 'text-emerald-400' : 'text-rose-400'}>
+                          {token.change24h}
+                        </span>
                       </div>
                     </div>
                   </div>
 
                   <div className="text-right">
-                    <span className="inline-block text-[9px] font-mono px-1.5 py-0.5 rounded border border-white/10 bg-black/40 text-gray-300">
-                      {t.standard}
+                    <span className="inline-block text-[10px] px-2 py-0.5 rounded-md border border-white/[0.08] bg-black/40 text-slate-300 font-mono">
+                      {token.standard}
                     </span>
-                    <div className="text-[10px] font-mono text-gray-400 mt-1 flex items-center justify-end gap-1 group-hover:text-[#00ffa3] transition-colors">
-                      <span>Audit</span>
-                      <ArrowUpRight className="w-3 h-3" />
+                    <div className="text-xs text-slate-500 mt-1 flex items-center justify-end gap-1 group-hover:text-[#00ffa3] transition-colors font-medium">
+                      <span>Inspect</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-
-            <div className="p-3 rounded-xl bg-black/30 border border-white/5 text-[11px] text-gray-400 font-mono leading-relaxed">
-              💡 Click any token to instantly run deep byte-level inspection and invariant simulation.
-            </div>
-          </div>
-        </section>
-
-        {/* CENTER COLUMN: PRE-FLIGHT SCANNER & REPORT DASHBOARD (5.5 cols) */}
-        <section className="lg:col-span-8 xl:col-span-5.5 space-y-6">
-          
-          {/* Main Search & Radar Bar */}
-          <div className="p-5 rounded-2xl cyber-glass border border-white/10 relative overflow-hidden">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#00ffa3] uppercase">
-                  <Terminal className="w-4 h-4" />
-                  <span>Token Radar & Pre-Flight Scanner</span>
-                </div>
-                <span className="text-[11px] font-mono text-gray-400">Direct Solana RPC Inspection</span>
-              </div>
-
-              {/* Input & Action */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="relative flex-1">
-                  <input
-                    type="text"
-                    value={mintInput}
-                    onChange={(e) => setMintInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleScan()}
-                    placeholder="Enter Solana Token Address (e.g., CKfatsP...)"
-                    className="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-xs font-mono text-white placeholder-gray-500 focus:outline-none focus:border-[#00ffa3]/80 transition-all"
-                  />
-                </div>
-                <button
-                  onClick={() => handleScan()}
-                  disabled={loading}
-                  className="bg-[#00ffa3] hover:bg-[#00ffa3]/90 text-black font-mono font-black text-xs px-6 py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(0,255,163,0.3)] disabled:opacity-50 whitespace-nowrap"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>INSPECTING BYTES...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="w-4 h-4 fill-black" />
-                      <span>RUN DEEP AUDIT</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
           </div>
 
-          {/* Loading Skeleton */}
-          {loading && (
-            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] animate-pulse space-y-4 font-mono text-xs">
-              <div className="flex items-center gap-3 text-[#00ffa3]">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <span className="font-bold tracking-wider">FETCHING ON-CHAIN TLV BYTES & SIMULATING INVARIANTS...</span>
+          {/* RIGHT COLUMN: Detailed Security Canvas (8 cols) */}
+          <div className="lg:col-span-8 space-y-6">
+            
+            {/* Loading Banner */}
+            {loading && (
+              <div className="rounded-3xl glass-panel p-8 text-center space-y-3 animate-pulse border border-[#00ffa3]/30">
+                <Loader2 className="w-8 h-8 text-[#00ffa3] animate-spin mx-auto" />
+                <h3 className="text-lg font-bold text-white">Extracting On-Chain TLV Extensions...</h3>
+                <p className="text-xs text-slate-400 font-mono">Reading mint bytes from Solana Mainnet validator cluster</p>
               </div>
-              <div className="h-4 bg-white/5 rounded w-3/4"></div>
-              <div className="h-4 bg-white/5 rounded w-1/2"></div>
-            </div>
-          )}
+            )}
 
-          {/* Error Message */}
-          {error && !loading && (
-            <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center gap-3 font-mono text-xs">
-              <AlertTriangle className="w-5 h-5 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* Detailed Audit Report */}
-          {report && !loading && (
-            <div className="space-y-6 animate-in fade-in duration-300">
-              
-              {/* Verdict & Score Banner */}
-              <div className={`p-6 rounded-2xl border ${currentBadge.bg} ${currentBadge.glow} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6`}>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    {report.riskLevel === 'SAFE' ? (
-                      <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400">
-                        <ShieldCheck className="w-7 h-7" />
-                      </div>
-                    ) : (
-                      <div className="p-2.5 rounded-xl bg-rose-500/20 text-rose-400">
-                        <ShieldAlert className="w-7 h-7" />
-                      </div>
-                    )}
-                    <div>
-                      <div className="text-[10px] font-mono uppercase tracking-widest opacity-80">Verdict Analysis</div>
-                      <h3 className="text-xl font-bold tracking-wide text-white">{currentBadge.label}</h3>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-300 font-mono leading-relaxed pl-1">
-                    {report.verdict}
-                  </p>
-                </div>
-
-                {/* Cyber Risk Gauge */}
-                <div className="flex items-center gap-4 bg-black/60 border border-white/10 px-6 py-4 rounded-xl font-mono">
-                  <div className="text-right">
-                    <div className="text-[10px] text-gray-400 uppercase tracking-wider">Threat Index</div>
-                    <div className="text-3xl font-black text-white">
-                      {report.riskScore}<span className="text-sm text-gray-500 font-normal">/100</span>
-                    </div>
-                  </div>
-                </div>
+            {/* Error Message */}
+            {error && !loading && (
+              <div className="rounded-3xl p-6 bg-rose-500/10 border border-rose-500/30 text-rose-300 flex items-center gap-4 text-sm">
+                <AlertTriangle className="w-6 h-6 flex-shrink-0 text-rose-400" />
+                <span>{error}</span>
               </div>
+            )}
 
-              {/* Round-Trip Pre-Execution Simulator View */}
-              <div className="p-5 rounded-2xl cyber-glass border border-white/10 space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                  <div className="flex items-center gap-2 text-xs font-mono font-bold text-white uppercase">
-                    <Activity className="w-4 h-4 text-[#00ffa3]" />
-                    <span>Round-Trip Pre-Execution Simulation</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    PASSED SIMULATION
-                  </span>
-                </div>
-
-                {/* Simulation Pipeline steps */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-center font-mono text-[11px]">
-                  <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 text-gray-300">
-                    <div className="text-emerald-400 font-bold mb-1">STEP 1</div>
-                    <div>Simulated Buy</div>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 text-gray-300">
-                    <div className="text-emerald-400 font-bold mb-1">STEP 2</div>
-                    <div>Hook CPI Check</div>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 text-gray-300">
-                    <div className="text-emerald-400 font-bold mb-1">STEP 3</div>
-                    <div>Tax Slippage Calc</div>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 text-gray-300">
-                    <div className="text-emerald-400 font-bold mb-1">STEP 4</div>
-                    <div>Simulated Sell Exit</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Detailed Breakdown Grids */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Audit Results View */}
+            {report && !loading && (
+              <div className="space-y-6">
                 
-                {/* Token-2022 Deep Audit */}
-                <div className="p-5 rounded-2xl cyber-glass border border-white/10 space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                    <div className="flex items-center gap-2 text-xs font-mono font-bold text-white uppercase">
-                      <Cpu className="w-4 h-4 text-[#00ffa3]" />
-                      <span>Token-2022 Extensions</span>
+                {/* Threat Banner & Score Card */}
+                <div className={`rounded-3xl p-7 border flex flex-col md:flex-row items-start md:items-center justify-between gap-6 ${
+                  isSafe ? 'bg-emerald-500/[0.07] border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.15)]' :
+                  isWarn ? 'bg-amber-500/[0.07] border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.15)]' :
+                  'bg-rose-500/[0.07] border-rose-500/30 shadow-[0_0_30px_rgba(244,63,94,0.2)]'
+                }`}>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      {isSafe ? (
+                        <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                          <ShieldCheck className="w-6 h-6" />
+                        </div>
+                      ) : isWarn ? (
+                        <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                          <AlertTriangle className="w-6 h-6" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
+                          <ShieldAlert className="w-6 h-6" />
+                        </div>
+                      )}
+                      <div>
+                        <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Security Verdict</div>
+                        <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                          {isSafe ? 'Clean & Verified Contract' : isWarn ? 'Warning: Elevated Risk Vector' : 'High Threat: Honeypot Pattern'}
+                        </h2>
+                      </div>
                     </div>
-                    <span className="text-[10px] font-mono text-gray-400 px-2 py-0.5 rounded bg-black/40 border border-white/5">
-                      {report.tokenStandard}
-                    </span>
+                    <p className="text-sm text-slate-300 pl-1 font-normal leading-relaxed">
+                      {report.verdict}
+                    </p>
+                    <div className="text-xs text-slate-400 pl-1 font-mono pt-1">
+                      Target: <span className="text-white font-semibold">{report.mint}</span>
+                    </div>
                   </div>
 
-                  <div className="space-y-2.5 font-mono text-xs">
-                    {/* Transfer Hook */}
-                    <div className="flex items-center justify-between p-2.5 rounded-lg bg-black/40 border border-white/5">
-                      <div>
-                        <div className="text-white font-medium">Transfer Hook</div>
-                        <div className="text-[10px] text-gray-400">External CPI execution</div>
+                  {/* Circular Threat Index */}
+                  <div className="flex items-center gap-4 bg-black/60 border border-white/[0.1] px-6 py-4 rounded-2xl">
+                    <div className="text-right">
+                      <div className="text-[10px] text-slate-400 uppercase font-semibold">Threat Index</div>
+                      <div className="text-3xl font-black text-white">
+                        {report.riskScore}<span className="text-sm text-slate-500 font-normal">/100</span>
                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4 Attack Vector Cards (2x2 Grid) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  
+                  {/* Vector 1: Transfer Hook */}
+                  <div className="rounded-2xl glass-panel p-5 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Transfer Hook CPI</span>
                       {report.extensions.hasTransferHook ? (
-                        <span className="text-rose-400 font-bold flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> DETECTED</span>
+                        <span className="text-rose-400 text-xs font-bold flex items-center gap-1"><XCircle className="w-4 h-4" /> Detected</span>
                       ) : (
-                        <span className="text-emerald-400 flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> NONE</span>
+                        <span className="text-emerald-400 text-xs font-bold flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> None (Safe)</span>
                       )}
                     </div>
-
-                    {/* Transfer Tax */}
-                    <div className="flex items-center justify-between p-2.5 rounded-lg bg-black/40 border border-white/5">
-                      <div>
-                        <div className="text-white font-medium">Transfer Tax Rate</div>
-                        <div className="text-[10px] text-gray-400">Deducted on every transfer</div>
-                      </div>
-                      {report.extensions.hasTransferFee ? (
-                        <span className="text-amber-400 font-bold">{(report.extensions.transferFeeBps / 100).toFixed(2)}%</span>
-                      ) : (
-                        <span className="text-emerald-400 flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> 0%</span>
-                      )}
-                    </div>
-
-                    {/* Permanent Delegate */}
-                    <div className="flex items-center justify-between p-2.5 rounded-lg bg-black/40 border border-white/5">
-                      <div>
-                        <div className="text-white font-medium">Permanent Delegate</div>
-                        <div className="text-[10px] text-gray-400">Confiscation authority</div>
-                      </div>
-                      {report.extensions.hasPermanentDelegate ? (
-                        <span className="text-rose-400 font-bold flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> ACTIVE</span>
-                      ) : (
-                        <span className="text-emerald-400 flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> NONE</span>
-                      )}
-                    </div>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      {report.extensions.hasTransferHook 
+                        ? `Custom CPI program (${report.extensions.transferHookProgramId?.slice(0, 8)}...) intercepts transfers and can revert sales.`
+                        : 'No external program hook is invoked during token transfers.'}
+                    </p>
                   </div>
+
+                  {/* Vector 2: Transfer Fee (Tax) */}
+                  <div className="rounded-2xl glass-panel p-5 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Transfer Fee Rate</span>
+                      {report.extensions.hasTransferFee ? (
+                        <span className="text-amber-400 text-xs font-bold">{(report.extensions.transferFeeBps / 100).toFixed(2)}% Tax</span>
+                      ) : (
+                        <span className="text-emerald-400 text-xs font-bold flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> 0% (Clean)</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      {report.extensions.hasTransferFee
+                        ? `Configured tax of ${(report.extensions.transferFeeBps / 100).toFixed(2)}% is deducted from every user transfer into creator vaults.`
+                        : 'No transfer fee withholding configured on this token mint.'}
+                    </p>
+                  </div>
+
+                  {/* Vector 3: Permanent Delegate */}
+                  <div className="rounded-2xl glass-panel p-5 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Permanent Delegate</span>
+                      {report.extensions.hasPermanentDelegate ? (
+                        <span className="text-rose-400 text-xs font-bold flex items-center gap-1"><XCircle className="w-4 h-4" /> Active</span>
+                      ) : (
+                        <span className="text-emerald-400 text-xs font-bold flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Revoked</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      {report.extensions.hasPermanentDelegate
+                        ? 'Authority can arbitrarily seize, burn, or transfer tokens without holder signature.'
+                        : 'No permanent delegate exists. Token holdings are non-custodial and secure.'}
+                    </p>
+                  </div>
+
+                  {/* Vector 4: Mint & Freeze Control */}
+                  <div className="rounded-2xl glass-panel p-5 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Freeze Authority</span>
+                      {report.standard.isFreezable ? (
+                        <span className="text-rose-400 text-xs font-bold flex items-center gap-1"><XCircle className="w-4 h-4" /> Active</span>
+                      ) : (
+                        <span className="text-emerald-400 text-xs font-bold flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Revoked</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      {report.standard.isFreezable
+                        ? 'Wallet freeze authority is active and can freeze token balances at any time.'
+                        : 'Freeze authority is permanently burned and revoked.'}
+                    </p>
+                  </div>
+
                 </div>
 
-                {/* Standard Authorities */}
-                <div className="p-5 rounded-2xl cyber-glass border border-white/10 space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                    <div className="flex items-center gap-2 text-xs font-mono font-bold text-white uppercase">
-                      <Lock className="w-4 h-4 text-[#00ffa3]" />
-                      <span>Mint & Freeze Control</span>
+                {/* Safe Trade Action (Jupiter DEX integration) */}
+                {isSafe && (
+                  <div className="rounded-2xl bg-gradient-to-r from-emerald-500/10 via-black/40 to-transparent border border-emerald-500/30 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Pre-Flight Verification Passed</span>
+                      </div>
+                      <p className="text-xs text-slate-300 mt-0.5">
+                        This token has 0% tax, no transfer hooks, and revoked authorities.
+                      </p>
                     </div>
-                    <span className="text-[10px] font-mono text-gray-400 px-2 py-0.5 rounded bg-black/40 border border-white/5">
-                      Authorities
+                    <a
+                      href={`https://jup.ag/swap/SOL-${report.mint}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black font-bold text-xs flex items-center gap-2 transition-all whitespace-nowrap shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                    >
+                      <span>Trade on Jupiter</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                )}
+
+                {/* Twitter / Solana Blink Card */}
+                <div className="rounded-2xl glass-panel p-5 space-y-3">
+                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                    <div className="flex items-center gap-2 text-white text-xs font-bold uppercase">
+                      <Share2 className="w-4 h-4 text-[#00ffa3]" />
+                      <span>Solana Action / Blink URL</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#00ffa3] bg-[#00ffa3]/10 px-2 py-0.5 rounded border border-[#00ffa3]/20">
+                      Standard API
                     </span>
                   </div>
-
-                  <div className="space-y-2.5 font-mono text-xs">
-                    {/* Freeze Authority */}
-                    <div className="flex items-center justify-between p-2.5 rounded-lg bg-black/40 border border-white/5">
-                      <div>
-                        <div className="text-white font-medium">Freeze Authority</div>
-                        <div className="text-[10px] text-gray-400">Wallet freezing capability</div>
-                      </div>
-                      {report.standard.isFreezable ? (
-                        <span className="text-rose-400 font-bold flex items-center gap-1"><XCircle className="w-3.5 h-3.5" /> ACTIVE</span>
-                      ) : (
-                        <span className="text-emerald-400 font-bold flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> REVOKED</span>
-                      )}
-                    </div>
-
-                    {/* Mint Authority */}
-                    <div className="flex items-center justify-between p-2.5 rounded-lg bg-black/40 border border-white/5">
-                      <div>
-                        <div className="text-white font-medium">Mint Authority</div>
-                        <div className="text-[10px] text-gray-400">Supply inflation capability</div>
-                      </div>
-                      {report.standard.isMintable ? (
-                        <span className="text-amber-400 font-bold flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> ACTIVE</span>
-                      ) : (
-                        <span className="text-emerald-400 font-bold flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> REVOKED</span>
-                      )}
-                    </div>
-
-                    {/* Total Decimals */}
-                    <div className="flex items-center justify-between p-2.5 rounded-lg bg-black/40 border border-white/5">
-                      <div>
-                        <div className="text-white font-medium">Decimals & Supply</div>
-                        <div className="text-[10px] text-gray-400">Token precision units</div>
-                      </div>
-                      <span className="text-white font-bold">{report.standard.decimals} decimals</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Safe Swap Action (Jupiter Routing) */}
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-black/40 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="space-y-1 text-center sm:text-left">
-                  <div className="text-xs font-mono font-bold text-emerald-400 uppercase flex items-center gap-1.5 justify-center sm:justify-start">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Safe-Swap Route Available</span>
-                  </div>
-                  <p className="text-xs text-gray-400 font-mono">
-                    This token passed invariant checks. You can route trades safely via Jupiter DEX.
+                  <p className="text-xs text-slate-400">
+                    Paste this endpoint into tweets on Twitter/X to generate a 1-click verification card for traders:
                   </p>
+                  <div className="flex items-center gap-2 bg-black/60 border border-white/[0.08] p-3 rounded-xl">
+                    <div className="text-xs font-mono text-slate-300 flex-1 truncate select-all">
+                      {typeof window !== 'undefined' ? `${window.location.origin}/api/actions/scan?mint=${report.mint}` : `/api/actions/scan?mint=${report.mint}`}
+                    </div>
+                    <button
+                      onClick={() => {
+                        const url = typeof window !== 'undefined' ? `${window.location.origin}/api/actions/scan?mint=${report.mint}` : `/api/actions/scan?mint=${report.mint}`;
+                        navigator.clipboard.writeText(url);
+                        setCopiedBlink(true);
+                        setTimeout(() => setCopiedBlink(false), 2000);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-[#00ffa3] text-black font-semibold text-xs transition-all flex items-center gap-1.5 whitespace-nowrap"
+                    >
+                      <Copy className="w-3 h-3" />
+                      <span>{copiedBlink ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
                 </div>
-                <a
-                  href={`https://jup.ag/swap/SOL-${report.mint}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black font-mono font-bold text-xs flex items-center gap-2 transition-all whitespace-nowrap shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                >
-                  <span>TRADE VIA JUPITER</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+
               </div>
+            )}
 
-            </div>
-          )}
-
-        </section>
-
-        {/* RIGHT COLUMN: BLINK INTEGRATION & THREAT INTELLIGENCE (3 cols) */}
-        <section className="lg:col-span-12 xl:col-span-3 space-y-4">
-          
-          {/* Solana Blink Twitter / Action Preview */}
-          <div className="p-5 rounded-2xl cyber-glass border border-white/10 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-white/5">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold text-white uppercase">
-                <Share2 className="w-4 h-4 text-[#00ffa3]" />
-                <span>Solana Blink Action</span>
-              </div>
-              <span className="text-[10px] font-mono text-[#00ffa3]">TWITTER / X NATIVE</span>
-            </div>
-
-            <p className="text-xs text-gray-400 font-mono leading-relaxed">
-              Paste this link directly into any tweet. Phantom and Backpack wallets render an interactive 1-click audit button inside Twitter feeds.
-            </p>
-
-            {/* Action Card Preview */}
-            <div className="p-3.5 rounded-xl bg-black/60 border border-white/10 space-y-2.5 font-mono text-xs">
-              <div className="flex items-center justify-between text-[11px] text-gray-400">
-                <span>Action URL:</span>
-                <button
-                  onClick={() => {
-                    const url = typeof window !== 'undefined' ? `${window.location.origin}/api/actions/scan?mint=${mintInput}` : `/api/actions/scan?mint=${mintInput}`;
-                    navigator.clipboard.writeText(url);
-                    setCopiedBlink(true);
-                    setTimeout(() => setCopiedBlink(false), 2000);
-                  }}
-                  className="text-[#00ffa3] hover:underline flex items-center gap-1 text-[10px]"
-                >
-                  <Copy className="w-3 h-3" />
-                  <span>{copiedBlink ? 'COPIED!' : 'COPY LINK'}</span>
-                </button>
-              </div>
-              <div className="p-2.5 rounded bg-black border border-white/5 text-[10px] text-gray-300 break-all select-all">
-                /api/actions/scan?mint={mintInput}
-              </div>
-            </div>
-
-            <a
-              href={`https://dial.to/?action=solana-action:${typeof window !== 'undefined' ? window.location.origin : ''}/api/actions/scan?mint=${mintInput}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white font-mono text-xs flex items-center justify-center gap-2 transition-all"
-            >
-              <Eye className="w-3.5 h-3.5 text-[#00ffa3]" />
-              <span>Preview on Dial.to</span>
-            </a>
           </div>
 
-          {/* Threat Intelligence / Exploit Vectors */}
-          <div className="p-5 rounded-2xl cyber-glass border border-white/10 space-y-3 font-mono text-xs">
-            <div className="flex items-center gap-2 text-xs font-bold text-white uppercase pb-2 border-b border-white/5">
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
-              <span>Token-2022 Attack Vectors</span>
-            </div>
-
-            <div className="space-y-2 text-[11px] text-gray-400 leading-relaxed">
-              <div className="p-2.5 rounded-lg bg-black/40 border border-white/5">
-                <strong className="text-white block mb-0.5">1. Stealth Transfer Hook</strong>
-                Attackers register CPI hooks that selectively revert when selling on DEXes, locking user SOL permanently.
-              </div>
-              <div className="p-2.5 rounded-lg bg-black/40 border border-white/5">
-                <strong className="text-white block mb-0.5">2. 99% Withholding Tax</strong>
-                High basis point fees configured inside Token-2022 that siphon 99% of traded value into creator vaults.
-              </div>
-              <div className="p-2.5 rounded-lg bg-black/40 border border-white/5">
-                <strong className="text-white block mb-0.5">3. Default Frozen Trap</strong>
-                New token holders receive tokens into accounts automatically frozen at genesis.
-              </div>
-            </div>
-          </div>
-
-        </section>
+        </div>
 
       </main>
 
-      {/* Cyber Footer */}
-      <footer className="border-t border-white/5 mt-12 py-6 text-xs text-gray-500 font-mono">
-        <div className="max-w-[1600px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* Sleek Minimal Footer */}
+      <footer className="border-t border-white/[0.08] py-6 text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>GuardRail Protocol © 2026 | Built for Colosseum Crypto World&apos;s Fair & SolanaCZE Track</div>
-          <div className="flex items-center gap-4 text-gray-400">
-            <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5 text-[#00ffa3]" /> Zero-Knowledge Pipeline</span>
-            <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5 text-[#00ffa3]" /> 100% Non-Custodial</span>
+          <div className="flex items-center gap-4 text-slate-400 font-medium">
+            <span>Zero-Knowledge Pipeline</span>
+            <span>•</span>
+            <span>100% Non-Custodial</span>
           </div>
         </div>
       </footer>

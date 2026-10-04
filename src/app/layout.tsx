@@ -2,11 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'GuardRail Protocol | Zero-Trust Solana & Token-2022 Security Engine',
+  title: 'GuardRail | Zero-Trust Solana & Token-2022 Security Engine',
   description: 'Military-grade pre-execution honeypot, transfer-hook, and predatory fee analysis on Solana.',
-  icons: {
-    icon: '/favicon.ico',
-  },
 };
 
 export default function RootLayout({
@@ -16,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-cyber-dark bg-cyber-grid selection:bg-cyber-neon selection:text-black">
+      <body className="min-h-screen bg-[#050608] text-[#f3f5f8] aurora-bg antialiased selection:bg-[#00ffa3] selection:text-black">
         {children}
       </body>
     </html>
