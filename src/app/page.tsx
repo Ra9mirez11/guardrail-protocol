@@ -32,7 +32,6 @@ import { BorderBeam } from '@/components/ui/BorderBeam';
 import { HoloGauge } from '@/components/ui/HoloGauge';
 import { BackgroundBeams } from '@/components/ui/BackgroundBeams';
 import { MarqueeTicker } from '@/components/ui/Marquee';
-import { SplineEyebotLocal } from '@/components/ui/SplineEyebotLocal';
 import { EncryptedText } from '@/components/ui/encrypted-text';
 
 export default function Home() {
@@ -128,14 +127,17 @@ export default function Home() {
 
       {/* CINEMATIC HERO SECTION */}
       <section className="relative max-w-7xl mx-auto px-6 pt-16 pb-12 text-center space-y-8">
-        {/* Interactive HUD Capsule Sentinel with Cursor Tracking Eye */}
+        {/* Clean High-Tech HUD Capsule Badge */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-block"
+          className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-emerald-400/40 bg-[#020d09]/90 backdrop-blur-xl shadow-[0_0_25px_rgba(0,255,170,0.25)] select-none"
         >
-          <SplineEyebotLocal />
+          <span className="w-2 h-2 rounded-full bg-[#00ffaa] animate-ping" />
+          <span className="text-xs sm:text-sm font-mono font-bold text-white tracking-wider drop-shadow-[0_0_8px_rgba(0,255,170,0.8)]">
+            Next-Gen Token-2022 Honeypot & Transfer Hook Sentinel
+          </span>
         </motion.div>
 
         {/* Massive Metallic Heading */}
