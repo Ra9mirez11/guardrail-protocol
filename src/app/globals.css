@@ -167,3 +167,36 @@
 @keyframes hudRotate {
   100% { transform: rotate(360deg); }
 }
+
+/* Print-Specific Styles for Official Audit Certificate PDF Export */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printable-audit-certificate,
+  #printable-audit-certificate * {
+    visibility: visible;
+  }
+
+  #printable-audit-certificate {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    padding: 30px;
+    background: #070914 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    z-index: 99999;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
