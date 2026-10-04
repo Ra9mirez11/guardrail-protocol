@@ -41,6 +41,7 @@ import { EncryptedText } from '@/components/ui/encrypted-text';
 import { ForensicTlvCard } from '@/components/ForensicTlvCard';
 import { SimulatorCard } from '@/components/SimulatorCard';
 import { AttestationBadge } from '@/components/AttestationBadge';
+import { IntroSplash } from '@/components/IntroSplash';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 export default function Home() {
@@ -50,6 +51,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'TOKEN22' | 'TOP' | 'NEW'>('TOKEN22');
   const [copiedBlink, setCopiedBlink] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
     // Initial scan on load
@@ -93,6 +95,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen text-slate-100 overflow-x-hidden selection:bg-emerald-400 selection:text-black font-sans pb-20">
+      {showIntro && <IntroSplash onComplete={() => setShowIntro(false)} />}
       {/* Dynamic Deep Space Beams & Particles */}
       <BackgroundBeams />
 
