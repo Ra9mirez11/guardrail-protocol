@@ -222,6 +222,40 @@ export default function Home() {
             </div>
           </div>
         </motion.div>
+      
+        {/* QUICK HONEYPOT VECTOR SELECTORS */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="max-w-3xl mx-auto pt-3 flex flex-wrap items-center justify-center gap-2 text-xs font-mono"
+        >
+          <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+            Honeypot Vectors:
+          </span>
+          <button
+            type="button"
+            onClick={() => handleScan('Tax9999999999999999999999999999999999999999')}
+            className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 hover:text-white transition-all text-[11px] font-bold flex items-center gap-1.5 shadow-[0_0_15px_rgba(244,63,94,0.15)] active:scale-95 cursor-pointer"
+          >
+            <span>TAX99 (99% Fee Trap)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleScan('HookTrap111111111111111111111111111111111111')}
+            className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 hover:text-white transition-all text-[11px] font-bold flex items-center gap-1.5 shadow-[0_0_15px_rgba(244,63,94,0.15)] active:scale-95 cursor-pointer"
+          >
+            <span>HOOKTRAP (Hook Revert)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleScan('DrainMe1111111111111111111111111111111111111')}
+            className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 hover:text-white transition-all text-[11px] font-bold flex items-center gap-1.5 shadow-[0_0_15px_rgba(244,63,94,0.15)] active:scale-95 cursor-pointer"
+          >
+            <span>DRAIN (Freeze Authority)</span>
+          </button>
+        </motion.div>
       </section>
 
       {/* COMPACT INFINITE MARQUEE RADAR (DOZENS OF REAL TOKENS) */}
@@ -240,6 +274,13 @@ export default function Home() {
                 className={`px-3 py-1 rounded-lg transition-all font-semibold text-[11px] ${activeTab === 'TOKEN22' ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20' : 'text-slate-400 hover:text-white'}`}
               >
                 TOKEN-2022
+              </button>
+              <button
+                onClick={() => setActiveTab('EXPLOITS')}
+                className={`px-3 py-1 rounded-lg transition-all font-semibold text-[11px] flex items-center gap-1.5 ${activeTab === 'EXPLOITS' ? 'bg-rose-500 text-white shadow-md shadow-rose-500/30 ring-1 ring-rose-400' : 'text-rose-400 hover:text-rose-300'}`}
+              >
+                <ShieldAlert className="w-3.5 h-3.5" />
+                HONEYPOT VECTORS
               </button>
               <button
                 onClick={() => setActiveTab('TOP')}
