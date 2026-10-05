@@ -1,7 +1,8 @@
 ﻿'use client';
 
-import React, { useState } from 'react';
-import { Download, Check, ShieldCheck, FileCheck, FileDown, X, Award, ExternalLink, Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { Download, Check, ShieldCheck, FileCheck, FileDown, X, Loader2 } from 'lucide-react';
 import { SecurityAuditReport } from '@/lib/types';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -14,6 +15,11 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
   const [downloadedJson, setDownloadedJson] = useState(false);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (!report) return null;
 
@@ -43,7 +49,7 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = 270;
+      const imgWidth = 260;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       const xOffset = (pdfWidth - imgWidth) / 2;
       const yOffset = (pdfHeight - imgHeight) / 2;
@@ -127,147 +133,146 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
     setTimeout(() => setDownloadedJson(false), 3000);
   };
 
+  const modalNode = showPreviewModal && mounted ? (
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto"
+      onClick={() => setShowPreviewModal(false)}
+    >
+      <div 
+        className="relative w-full max-w-2xl my-auto flex flex-col rounded-3xl bg-[#070914] border border-emerald-500/50 shadow-[0_0_100px_rgba(16,185,129,0.35)] font-mono text-left p-6 sm:p-7 space-y-5"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div className="flex items-center justify-between border-b border-white/[0.08] pb-3.5">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  ON-CHAIN FORENSIC ATTESTATION
+                </span>
+                <span className="text-[11px] text-slate-400">GUARDRAIL PROTOCOL</span>
+              </div>
+              <h3 className="text-sm sm:text-base font-bold text-white tracking-wider mt-0.5">
+                TOKEN SECURITY AUDIT CERTIFICATE
+              </h3>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowPreviewModal(false)}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-all cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Certificate Card to Render in PDF */}
+        <div 
+          id="formal-audit-card" 
+          className={`p-5 rounded-2xl bg-[#05070f] border ${statusBorder} space-y-4 shadow-xl`}
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div>
+              <span className="text-[10px] text-slate-500 block uppercase">Security Classification:</span>
+              <span className={`text-base font-black tracking-wide ${statusColor}`}>
+                {report.categoryLabel} ({report.riskScore}/100 RISK)
+              </span>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] text-slate-500 block uppercase">Solana Slot:</span>
+              <span className="text-xs text-cyan-300 font-bold">SLOT #{report.attestationProof.attestationSlot}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+              <span className="text-[10px] text-slate-500 block uppercase mb-1">Target Token Mint:</span>
+              <span className="text-cyan-300 break-all text-[11px] font-bold">{report.mint}</span>
+            </div>
+            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+              <span className="text-[10px] text-slate-500 block uppercase mb-1">Anchor PDA Certificate:</span>
+              <span className="text-emerald-300 break-all text-[11px] font-bold">{report.attestationProof.pdaAddress}</span>
+            </div>
+            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+              <span className="text-[10px] text-slate-500 block uppercase mb-1">Transfer Hook & Taxes:</span>
+              <span className="text-white text-[11px]">
+                {report.extensions.hasTransferHook ? 'DETECTED (CPI HOOK)' : 'None (Clean)'} | Tax: {(report.extensions.transferFeeBps / 100).toFixed(2)}%
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+              <span className="text-[10px] text-slate-500 block uppercase mb-1">Pre-Flight Simulation:</span>
+              <span className="text-white text-[11px]">
+                {report.simulation.canExecuteSell ? 'VERIFIED NON-HONEYPOT (PASS)' : 'BLOCKED / REVERTED'}
+              </span>
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-[11px] text-slate-300 leading-relaxed font-sans">
+            <p>
+              <strong className="text-emerald-400 font-mono">Cryptographic Verification Proof:</strong> This formal certificate authenticates that on-chain storage layout (TLV extensions), mint & freeze authorities, and transaction invariants were verified on Solana.
+            </p>
+            <div className="mt-2.5 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono text-slate-400">
+              <span>AUDITOR SIGNER: {report.attestationProof.auditorAuthority}</span>
+              <span className="text-emerald-400 font-bold">ANCHOR ID: Guard1111...</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <button
+            onClick={handleDownloadDirectPdf}
+            disabled={downloadingPdf}
+            className="px-5 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-400/40 text-xs font-bold text-cyan-300 hover:text-white flex items-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(6,182,212,0.15)] cursor-pointer"
+          >
+            {downloadingPdf ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+                <span>GENERATING PDF...</span>
+              </>
+            ) : (
+              <>
+                <FileDown className="w-4 h-4 text-cyan-400" />
+                <span>EXPORT AUDIT PDF</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={handleDownloadJson}
+            className="px-5 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black text-xs font-black flex items-center gap-2 transition-all shadow-[0_0_25px_rgba(16,185,129,0.3)] active:scale-95 cursor-pointer"
+          >
+            {downloadedJson ? (
+              <>
+                <Check className="w-4 h-4 text-black" />
+                <span>JSON PROOF DOWNLOADED</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 text-black" />
+                <span>EXPORT SIGNED JSON PROOF</span>
+              </>
+            )}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  ) : null;
+
   return (
     <>
       <button
         onClick={() => setShowPreviewModal(true)}
-        className="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-xs font-mono font-medium text-emerald-400 hover:text-emerald-300 transition-all flex items-center gap-2 active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+        className="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-xs font-mono font-medium text-emerald-400 hover:text-emerald-300 transition-all flex items-center gap-2 active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.15)] cursor-pointer"
       >
         <FileCheck className="w-4 h-4 text-emerald-400" />
         <span>VIEW / EXPORT CERTIFICATE</span>
       </button>
 
-      {showPreviewModal && (
-        <div 
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200"
-          onClick={() => setShowPreviewModal(false)}
-        >
-          <div 
-            className="relative w-full max-w-3xl flex flex-col rounded-3xl bg-[#070914] border border-emerald-500/50 shadow-[0_0_120px_rgba(16,185,129,0.35)] font-mono text-left p-6 sm:p-8 space-y-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Top Controls */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                      ON-CHAIN FORENSIC ATTESTATION
-                    </span>
-                    <span className="text-[11px] text-slate-400">GUARDRAIL PROTOCOL</span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-white tracking-wider mt-0.5">
-                    TOKEN SECURITY AUDIT CERTIFICATE
-                  </h3>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowPreviewModal(false)}
-                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.05] transition-all"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Formal Certificate Card Captured Directly to PDF */}
-            <div 
-              id="formal-audit-card" 
-              className={`p-6 rounded-2xl bg-black/80 border ${statusBorder} space-y-5 shadow-2xl relative overflow-hidden`}
-            >
-              {/* Watermark Logo Glow */}
-              <div className="absolute -right-10 -bottom-10 w-60 h-60 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-                <div>
-                  <span className="text-[10px] text-slate-500 block uppercase tracking-wider">Security Verdict & Classification:</span>
-                  <span className={`text-lg font-black tracking-wide ${statusColor}`}>
-                    {report.categoryLabel} ({report.riskScore}/100 RISK)
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="text-[10px] text-slate-500 block uppercase tracking-wider">Solana Attested Slot:</span>
-                  <span className="text-sm text-cyan-300 font-bold">SLOT #{report.attestationProof.attestationSlot}</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Target Token Mint:</span>
-                  <span className="text-cyan-300 break-all text-[11px] font-bold">{report.mint}</span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Anchor PDA Certificate:</span>
-                  <span className="text-emerald-300 break-all text-[11px] font-bold">{report.attestationProof.pdaAddress}</span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Transfer Hook & Taxes:</span>
-                  <span className="text-white text-[11px]">
-                    {report.extensions.hasTransferHook ? 'DETECTED (CPI HOOK)' : 'None (Clean)'} | Tax: {(report.extensions.transferFeeBps / 100).toFixed(2)}%
-                  </span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Pre-Flight Simulation:</span>
-                  <span className="text-white text-[11px]">
-                    {report.simulation.canExecuteSell ? 'VERIFIED NON-HONEYPOT (PASS)' : 'BLOCKED / REVERTED'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-xs text-slate-300 leading-relaxed font-sans">
-                <p>
-                  <strong className="text-emerald-400 font-mono">Cryptographic Verification Proof:</strong> This formal certificate authenticates that on-chain storage layout (TLV extensions), mint & freeze authorities, and transaction invariants were verified on Solana.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-slate-400">
-                  <span>AUDITOR SIGNER: {report.attestationProof.auditorAuthority}</span>
-                  <span className="text-emerald-400 font-bold">ANCHOR ID: Guard1111...</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons: Direct Pixel-Perfect PDF Export + JSON */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-              <button
-                onClick={handleDownloadDirectPdf}
-                disabled={downloadingPdf}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500/20 to-teal-500/20 hover:from-cyan-500/30 hover:to-teal-500/30 border border-cyan-400/40 text-xs font-bold text-cyan-300 hover:text-white flex items-center gap-2.5 transition-all active:scale-95 shadow-[0_0_20px_rgba(6,182,212,0.2)]"
-              >
-                {downloadingPdf ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
-                    <span>GENERATING HIGH-RES PDF...</span>
-                  </>
-                ) : (
-                  <>
-                    <FileDown className="w-4 h-4 text-cyan-400" />
-                    <span>EXPORT HIGH-RES AUDIT PDF</span>
-                  </>
-                )}
-              </button>
-
-              <button
-                onClick={handleDownloadJson}
-                className="px-6 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black text-xs font-black flex items-center gap-2.5 transition-all shadow-[0_0_25px_rgba(16,185,129,0.35)] active:scale-95"
-              >
-                {downloadedJson ? (
-                  <>
-                    <Check className="w-4 h-4 text-black" />
-                    <span>JSON PROOF DOWNLOADED</span>
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-4 h-4 text-black" />
-                    <span>EXPORT SIGNED JSON PROOF</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
+      {mounted && typeof document !== 'undefined' ? createPortal(modalNode, document.body) : null}
     </>
   );
 }
