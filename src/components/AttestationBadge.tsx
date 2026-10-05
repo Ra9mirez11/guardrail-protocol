@@ -1,10 +1,9 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js';
-import { Award, Loader2, Check, ExternalLink, ShieldCheck, Wallet, AlertCircle } from 'lucide-react';
+import { Award, Loader2, Check, ExternalLink, ShieldCheck, AlertCircle, X } from 'lucide-react';
 import { OnChainAttestationProof } from '@/lib/types';
 
 const GUARDRAIL_DEVNET_PROGRAM_ID = new PublicKey('Guard111111111111111111111111111111111111111');
@@ -80,7 +79,7 @@ export function AttestationBadge({ proof, mint }: { proof?: OnChainAttestationPr
           <button
             onClick={handleMintRealTransaction}
             disabled={isAttesting}
-            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 hover:from-emerald-500/30 hover:to-teal-500/30 border border-emerald-400/40 text-emerald-300 hover:text-white transition-all text-[11px] font-bold flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.15)] active:scale-95"
+            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 hover:from-emerald-500/30 hover:to-teal-500/30 border border-emerald-400/40 text-emerald-300 hover:text-white transition-all text-[11px] font-bold flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.15)] active:scale-95 cursor-pointer"
           >
             {isAttesting ? (
               <span className="flex items-center gap-1.5">
@@ -118,7 +117,12 @@ export function AttestationBadge({ proof, mint }: { proof?: OnChainAttestationPr
                 <ShieldCheck className="w-6 h-6" />
                 <span className="text-sm font-bold text-white tracking-wider">ON-CHAIN SECURITY ATTESTATION RECORDED</span>
               </div>
-              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-white text-xs">✕</button>
+              <button 
+                onClick={() => setModalOpen(false)} 
+                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-all cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed font-sans">
               An immutable security proof was signed and recorded into GuardRail's Anchor Smart Contract PDA storage on Solana Devnet:
@@ -153,7 +157,7 @@ export function AttestationBadge({ proof, mint }: { proof?: OnChainAttestationPr
               </a>
               <button
                 onClick={() => setModalOpen(false)}
-                className="flex-1 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black text-xs font-black"
+                className="flex-1 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black text-xs font-black cursor-pointer"
               >
                 CONFIRM & CLOSE
               </button>

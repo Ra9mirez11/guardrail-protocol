@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { ActionGetResponse, ACTION_HEADERS } from '@/lib/actionTypes';
 import { GuardRailInspector } from '@/lib/tokenInspector';
 
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const mint = searchParams.get('mint') || 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263';
 
-  let title = '🛡️ GuardRail Security Attestation';
+  let title = 'GuardRail Security Attestation';
   let description = 'Zero-Trust Pre-Execution Firewall for Solana. Inspect Token-2022 Transfer Hooks, Fees, and Honeypot traps.';
   const icon = 'https://raw.githubusercontent.com/solana-developers/brand-kit/main/assets/png/solana-badge-black.png';
 
@@ -21,8 +21,8 @@ export async function GET(req: NextRequest) {
     const inspector = new GuardRailInspector(rpcUrl);
     const report = await inspector.inspectMint(mint);
 
-    title = `🛡️ GuardRail: ${report.riskLevel} (${report.riskScore}/100)`;
-    description = `Token: ${mint.slice(0, 4)}...${mint.slice(-4)} | Standard: ${report.tokenStandard} | Freeze: ${report.standard.isFreezable ? 'YES ⚠️' : 'REVOKED ✅'} | Mint: ${report.standard.isMintable ? 'YES ⚠️' : 'REVOKED ✅'} | Hooks: ${report.extensions.hasTransferHook ? 'ATTACHED ⚠️' : 'NONE ✅'}`;
+    title = `GuardRail: ${report.riskLevel} (${report.riskScore}/100 Risk)`;
+    description = `Token: ${mint.slice(0, 4)}...${mint.slice(-4)} | Standard: ${report.tokenStandard} | Freeze: ${report.standard.isFreezable ? 'YES' : 'REVOKED'} | Mint: ${report.standard.isMintable ? 'YES' : 'REVOKED'} | Hooks: ${report.extensions.hasTransferHook ? 'ATTACHED' : 'NONE'}`;
   } catch {
     // Graceful fallback
   }
