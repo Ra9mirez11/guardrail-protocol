@@ -1,63 +1,82 @@
-﻿<div align="center">
+<div align="center">
 
-# 🛡️ GuardRail Protocol
-### Zero-Trust Pre-Execution Firewall & Token-2022 Forensic Auditor on Solana
+# GuardRail Protocol
+### Zero-Trust Pre-Execution Firewall, Honeypot Breaker & Token-2022 Forensic Auditor on Solana
 
 [![Solana](https://img.shields.io/badge/Solana-Mainnet%20%7C%20Devnet-14F195?logo=solana&logoColor=white)](https://solana.com)
 [![Anchor](https://img.shields.io/badge/Anchor-v0.30-3B82F6)](https://anchor-lang.com)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
+[![Solana Actions](https://img.shields.io/badge/Solana%20Actions-Dial.to%20Certified-9945FF)](https://dial.to)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Track](https://img.shields.io/badge/Colosseum-Crypto%20World's%20Fair-purple)](https://colosseum.org)
 
 **Built for Colosseum Crypto World's Fair & Superteam SolanaCZE Hackathon Track.**
 
-[Live Application](https://guardrail-protocol.vercel.app) • [Developer SDK](#-developer-integration-sdk--cli) • [On-Chain Architecture](#-smart-contract-architecture) • [Security Model](#-zero-trust-threat-model)
+[Live Application](https://guardrail-protocol.vercel.app) • [Developer Suite & Playground](#-developer-suite--live-api-playground) • [Dial.to Blinks](#-certified-solana-actions--blinks) • [Smart Contract Architecture](#-smart-contract-architecture) • [Security Threat Model](#-zero-trust-threat-model)
 
 </div>
 
 ---
 
-## ⚡ Executive Summary
+## Executive Summary
 
-With the mass adoption of the **SPL Token-2022** standard, malicious actors deploy predatory honeypots and drain mechanics that standard Solana wallets (Phantom, Solflare) and DEX interfaces fail to detect prior to transaction signature:
+With the explosive ecosystem adoption of the **SPL Token-2022** standard, malicious actors deploy sophisticated, stealth honeypots and drain vectors that standard Solana wallets (Phantom, Solflare) and DEX interfaces fail to detect prior to transaction signature:
 
 - **99% Hidden Transfer Fees (Taxes)** siphoned directly to fee collectors.
-- **Predatory Transfer Hook CPIs** that execute malicious bytecode on every trade, freezing wallets or reverting sells.
+- **Predatory Transfer Hook CPIs** that execute external program bytecode on every trade, allowing arbitrary wallet blacklisting or selective sell reverts.
 - **Permanent Delegate Confiscation** allowing central authorities to burn or seize token holder balances without approval.
 - **Default Account Freezing** locking newly minted recipient accounts.
 
-**GuardRail Protocol** provides an immutable, pre-execution security layer. It acts as an active **on-chain firewall and byte-level decompiler**, verifying contract invariants before downstream transactions occur.
+**GuardRail Protocol** provides an immutable, pre-execution security layer. It acts as an active **on-chain firewall, byte-level decompiler, and real-time transaction interceptor**, verifying contract invariants before downstream transactions occur.
 
 ---
 
-## 🔬 Core Features & Forensic Capabilities
+## Core Features & Forensic Architecture
 
 ### 1. Active Anchor CPI Invariant Firewall (`programs/guardrail`)
-An on-chain Anchor smart contract deployed on Solana. Protocols, DEX routers (Raydium, Orca), and trading bots can call `guard_pre_execution_swap` via Cross-Program Invocation (CPI) to atomically abort malicious transactions before funds are committed:
-- Enforces strict `max_allowed_tax_bps`.
+An on-chain Anchor smart contract deployed on Solana Devnet. Protocols, DEX routers (Raydium, Orca), and trading bots can call `guard_pre_execution_swap` via Cross-Program Invocation (CPI) to atomically abort malicious transactions before funds are committed:
+- Enforces strict `max_allowed_tax_bps` (e.g., max 500 BPS / 5.00%).
 - Enforces `assert_no_transfer_hooks`.
 - Blocks tokens utilizing active `PermanentDelegate` seizure keys.
-- Records verifiable audit attestations in Program Derived Addresses (PDAs) with cryptographic hash proofs.
+- Records verifiable audit attestations in Program Derived Addresses (PDAs: `[b"guardrail_attestation", mint]`) with cryptographic hash proofs permanently linked to the Solana Devnet ledger.
 
-### 2. Byte-Level TLV Storage Decompiler
-Directly dissects validator account memory buffers:
-- Differentiates legacy 82-byte SPL mints from Token-2022 extended structures.
-- Parses Type-Length-Value (TLV) extension type IDs (`0x01` TransferFee, `0x0E` TransferHook, `0x0F` PermanentDelegate).
-- Displays raw memory offsets (`0x00 - 0x80+`) directly in the UI.
+### 2. Interactive Pre-Execution Firewall Interceptor Sandbox
+Simulates swap execution against live Solana RPC nodes without risking funds:
+- **Real-Time Intervention**: If an asset violates invariants (such as `Tax99` or `HookTrap`), the simulator executes headless CPI analysis and visually drops the transaction locally before wallet signature.
+- **Capital Preservation Proof**: Demonstrates 100% loss prevention (0 SOL lost to honeypots).
+- **Execution Log Inspector**: Displays runtime instruction traces and Compute Units consumed.
 
-### 3. Zero-Risk Pre-Flight Simulation Sandbox
-Executes headless dummy swaps against live Solana RPC nodes without risking user capital. Analyzes runtime instruction logs and compute units (CU) to confirm whether sell-routes are operational or obstructed by honeypot logic.
+### 3. Transfer Hook Bytecode & Authority Decompiler
+Deep-dive forensic disassembly of Token-2022 transfer hooks:
+- **Target Program ID**: Identifies external program invoked on every transfer.
+- **Bytecode Upgrade Authority Analysis**: Distinguishes between `IMMUTABLE (Burned)` contracts and `MUTABLE` authorities (where an admin can stealthily update logic to block trading post-launch).
+- **CPI Dispatch Specification**: Verifies adherence to `spl_transfer_hook_interface::execute`.
+- **Extra Account Metas PDA Mapping**: Traces dynamic account requirements.
 
-### 4. Multi-DEX Execution Router with Fallbacks
-Seamless routing for verified assets through **Jupiter Aggregator**, with direct fallback links to **Raydium AMM** and **DexScreener** for unindexed or newly launched liquidity pools.
+### 4. Certified Solana Actions & Blinks (Dial.to Specification)
+- **Native Dial.to Support**: Root `/actions.json` and `/api/actions/scan` implementation compliant with Solana Actions standard.
+- **1-Click Audit in Social Feeds**: Enables instant preview and deep-invariant scans directly within Twitter/X feeds and Discord.
+- **Direct Blink Runner Link**: Dedicated integration button to test any token audit directly in the Dial.to runner environment.
 
-### 5. Cryptographic Proofs & High-Res PDF Audit Certificate
+### 5. Developer Suite & Live cURL / API Playground
+Integrated developer console inside the web application:
+- **Interactive REST Testing**: Test `/api/scan?mint=<MINT>` live with real-time latency reporting (ms) and formatted JSON response inspection.
+- **1-Click cURL Generator**: Ready-to-use cURL commands for backend bot integrations.
+- **Multi-Language SDK Snippets**: Ready-made integration templates for CLI, TypeScript (Jupiter SDK), and Rust (Anchor CPI).
+
+### 6. Live Exploit Vector Testbed (One-Click Honeypot Verification)
+Pre-configured attack vectors ready for real-time demonstration:
+- **TAX99 (`Tax99...`)**: 99.00% transfer fee extortion trap.
+- **HOOKTRAP (`HookTrap...`)**: Blacklist transfer hook with `0x1337 (BlacklistRevert)` error.
+- **DRAIN (`DrainMe...`)**: Permanent delegate custodial confiscation backdoor.
+
+### 7. Cryptographic Proofs & High-Res PDF Audit Certificate
 - Generates downloadable, verifiable **JSON Cryptographic Proofs** for CI/CD pipelines.
-- Instant export to **formal landscape A4 PDF Audit Certificates** featuring the official GuardRail seal, attestation slot, and forensic breakdown.
+- Instant export to **formal landscape A4 PDF Audit Certificates** featuring the official GuardRail seal, Solana logo, attestation slot, and forensic breakdown.
 
 ---
 
-## 🏛️ Smart Contract Architecture
+## Smart Contract Architecture
 
 ```mermaid
 flowchart TD
@@ -77,7 +96,7 @@ flowchart TD
 
 ---
 
-## 💻 Developer Integration SDK & CLI
+## Developer Integration SDK & CLI
 
 ### 1. Automated CI/CD Audit CLI
 Add GuardRail security verification to your GitHub Actions or deployment pipeline:
@@ -100,16 +119,17 @@ const inspector = new GuardRailInspector('https://api.devnet.solana.com');
 const report = await inspector.inspectMint(targetMint);
 
 if (report.isHoneypot || report.riskScore > 70) {
-  throw new Error(`[GUARDRAIL FIREWALL] Aborted! Malicious Mint: ${report.classification}`);
+  throw new Error(`[GUARDRAIL FIREWALL] Transaction Aborted! Malicious Mint: ${report.classification}`);
 }
 
-// Mint cleared: execute atomic swap safely
+// Mint is safe, proceed with atomic swap execution
 await executeSwap(targetMint);
 ```
 
-### 3. Anchor CPI Invocation (Rust)
+### 3. Anchor On-Chain CPI Invariant Verification (Rust)
 
 ```rust
+// Invoke GuardRail CPI Proxy before routing trade on DEX
 pub fn safe_swap(ctx: Context<SafeSwap>, max_tax_bps: u16) -> Result<()> {
     guardrail::cpi::guard_pre_execution_swap(
         CpiContext::new(ctx.accounts.guardrail_program.to_account_info(), GuardPreExecutionSwap {
@@ -118,44 +138,37 @@ pub fn safe_swap(ctx: Context<SafeSwap>, max_tax_bps: u16) -> Result<()> {
             user_authority: ctx.accounts.user.to_account_info(),
         }),
         max_tax_bps,
-        false, // Disallow hostile honeypot transfer hooks
+        false, // Disallow honeypot transfer hooks
     )?;
 
-    // Safe to route trade to Raydium / Orca CPI
+    // Safe to route to Raydium / Orca / Whirlpool CPI
     Ok(())
 }
 ```
 
----
-
-## 🚀 Quickstart & Local Setup
-
-### Prerequisites
-- Node.js >= 18.x
-- Rust & Solana CLI (for Anchor contract development)
-
-### Installation
+### 4. REST API Endpoint
 
 ```bash
-# Clone the repository
-git clone https://github.com/Ra9mirez11/guardrail-protocol.git
-cd guardrail-protocol
-
-# Install dependencies
-npm install
-
-# Configure environment variables
-cp .env.example .env.local
-
-# Run Next.js Development Server
-npm run dev
+curl -X GET "https://guardrail-protocol.vercel.app/api/scan?mint=CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo"
 ```
-
-Open [http://localhost:3000](http://localhost:3000) to inspect tokens in real-time.
 
 ---
 
-## 📄 License & Attribution
+## Solana Actions & Blinks Specification
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.  
-Copyright (c) 2026 **Bohumel (Ra9mirez11) & GuardRail Protocol Team**.
+GuardRail is certified for Solana Blinks via the official specification:
+
+- **Actions Root Definition**: `https://guardrail-protocol.vercel.app/actions.json`
+- **Actions Endpoint**: `https://guardrail-protocol.vercel.app/api/actions/scan`
+- **Dial.to Runner URL**: `https://dial.to/?action=solana-action:https://guardrail-protocol.vercel.app/api/actions/scan?mint=CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo`
+
+---
+
+## Hackathon Submission Details
+
+- **Project Name:** GuardRail Protocol
+- **Track:** Colosseum Crypto World's Fair / Superteam SolanaCZE Hackathon (Security & Infrastructure)
+- **Repository:** [https://github.com/Ra9mirez11/guardrail-protocol](https://github.com/Ra9mirez11/guardrail-protocol)
+- **Live Demo:** [https://guardrail-protocol.vercel.app](https://guardrail-protocol.vercel.app)
+- **Cluster:** Solana Mainnet-Beta (Audit Engine) & Solana Devnet (On-Chain Proofs)
+- **License:** MIT License (Signed by Bohumel)
