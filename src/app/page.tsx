@@ -45,6 +45,7 @@ import { ForensicTlvCard } from '@/components/ForensicTlvCard';
 import { SimulatorCard } from '@/components/SimulatorCard';
 import { AttestationBadge } from '@/components/AttestationBadge';
 import { IntroSplash } from '@/components/IntroSplash';
+import { TransferHookDecompiler } from '@/components/TransferHookDecompiler';
 // WalletMultiButton handled by SSR-safe WalletButtonWrapper
 
 export default function Home() {
@@ -130,14 +131,14 @@ export default function Home() {
 
           {/* Quick Metrics / Network Status */}
           <div className="flex items-center gap-3">
-            <SdkModal />
+            <SdkModal currentMint={mintInput} />
             <WalletButtonWrapper />
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>MAINNET RADAR LIVE</span>
             </div>
             <a
-              href="https://github.com"
+              href="https://github.com/Ra9mirez11/guardrail-protocol"
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-mono font-medium text-slate-300 transition-colors flex items-center gap-2"
@@ -510,6 +511,15 @@ export default function Home() {
                       <span>{copiedBlink ? 'COPIED' : 'COPY'}</span>
                     </button>
                   </div>
+                  <a
+                    href={`https://dial.to/?action=solana-action:${encodeURIComponent(typeof window !== 'undefined' ? `${window.location.origin}/api/actions/scan?mint=${report.mint}` : `https://guardrail-protocol.vercel.app/api/actions/scan?mint=${report.mint}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full mt-2.5 py-2.5 px-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-[11px] font-mono font-bold text-cyan-300 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>TEST IN DIAL.TO BLINK RUNNER</span>
+                  </a>
                 </TiltCard>
               </div>
 
@@ -626,6 +636,11 @@ export default function Home() {
                 <div className="lg:col-span-6">
                   <SimulatorCard simulation={report.simulation} mint={report.mint} />
                 </div>
+              </div>
+
+              {/* BENTO ROW 4: FORENSIC TRANSFER HOOK DECOMPILER */}
+              <div className="lg:col-span-12">
+                <TransferHookDecompiler report={report} />
               </div>
 
             </div>
