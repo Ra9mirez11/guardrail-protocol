@@ -168,21 +168,39 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
           </button>
         </div>
 
-        {/* Certificate Card to Render in PDF */}
+        {/* Certificate Card to Render in PDF (With Official Logo Embed) */}
         <div 
           id="formal-audit-card" 
-          className={`p-5 rounded-2xl bg-[#05070f] border ${statusBorder} space-y-4 shadow-xl`}
+          className={`p-5 rounded-2xl bg-[#05070f] border ${statusBorder} space-y-4 shadow-xl relative overflow-hidden`}
         >
+          {/* Top Brand Banner with Official Logo */}
           <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo.png"
+                alt="GuardRail Logo"
+                className="w-10 h-10 object-contain rounded-xl border border-emerald-500/30 p-1 bg-black/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+              />
+              <div>
+                <span className="text-xs font-black tracking-wider text-white block">GUARDRAIL PROTOCOL</span>
+                <span className="text-[10px] text-emerald-400 font-mono">ZERO-TRUST PRE-EXECUTION FIREWALL</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] text-slate-500 block uppercase">Solana Slot:</span>
+              <span className="text-xs text-cyan-300 font-bold">SLOT #{report.attestationProof.attestationSlot}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-1">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase">Security Classification:</span>
               <span className={`text-base font-black tracking-wide ${statusColor}`}>
                 {report.categoryLabel} ({report.riskScore}/100 RISK)
               </span>
             </div>
-            <div className="text-right">
-              <span className="text-[10px] text-slate-500 block uppercase">Solana Slot:</span>
-              <span className="text-xs text-cyan-300 font-bold">SLOT #{report.attestationProof.attestationSlot}</span>
+            <div className="px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[10px] font-bold">
+              VERIFIED SECURE INVARIANT
             </div>
           </div>
 
