@@ -20,8 +20,7 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
   const statusBorder = isSafe ? 'border-emerald-500/40' : isWarn ? 'border-amber-500/40' : 'border-rose-500/40';
 
   const certificatePayload = {
-    protocol: 'GuardRail Protocol v1.0 (Zero-Trust Solana Firewall & Token-2022 Forensic Auditor)',
-    specification: 'SEC-SOL-AUDIT-V1-COMPLIANT',
+    protocol: 'GuardRail Protocol v1.0 (Zero-Trust Solana Pre-Execution Firewall)',
     certifiedAt: new Date(report.analyzedAt).toISOString(),
     cluster: 'Solana Devnet / Mainnet-Beta',
     mintAudited: report.mint,
@@ -106,17 +105,17 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
 
       {showPreviewModal && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setShowPreviewModal(false)}
         >
           <div 
             id="printable-audit-certificate"
-            className="relative w-full max-w-2xl max-h-[85vh] my-auto flex flex-col rounded-3xl bg-[#070914] border border-emerald-500/40 shadow-[0_0_90px_rgba(16,185,129,0.25)] font-mono text-left overflow-hidden"
+            className="relative w-full max-w-2xl flex flex-col rounded-3xl bg-[#070914] border border-emerald-500/40 shadow-[0_0_90px_rgba(16,185,129,0.25)] font-mono text-left overflow-hidden p-5 sm:p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             
-            {/* Certificate Header Banner */}
-            <div className="p-5 sm:p-6 border-b border-white/[0.08] flex items-center justify-between flex-shrink-0 bg-white/[0.02]">
+            {/* Header Banner - Transparent, Clean, Professional */}
+            <div className="border-b border-white/[0.08] pb-3.5 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                   <ShieldCheck className="w-6 h-6" />
@@ -124,12 +123,12 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                      OFFICIAL AUDIT PROOF
+                      ON-CHAIN FORENSIC ATTESTATION
                     </span>
-                    <span className="text-[11px] text-slate-400">ISO/SEC-SOLANA-V1</span>
+                    <span className="text-[11px] text-slate-400">GUARDRAIL PROTOCOL</span>
                   </div>
                   <h3 className="text-sm sm:text-base font-bold text-white tracking-wider mt-0.5">
-                    GUARDRAIL PROTOCOL AUDIT CERTIFICATE
+                    TOKEN SECURITY AUDIT CERTIFICATE
                   </h3>
                 </div>
               </div>
@@ -141,62 +140,60 @@ export function AuditExportButton({ report }: AuditExportButtonProps) {
               </button>
             </div>
 
-            {/* Visual Formal Certificate Card (Scrollable Area) */}
-            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto max-h-[58vh]">
-              <div className={`p-5 rounded-2xl bg-black/70 border ${statusBorder} space-y-4 shadow-inner`}>
-                <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
-                  <div>
-                    <span className="text-[10px] text-slate-500 block uppercase">Security Verdict & Classification:</span>
-                    <span className={`text-base font-black tracking-wide ${statusColor}`}>
-                      {report.categoryLabel} ({report.riskScore}/100 RISK)
-                    </span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[10px] text-slate-500 block uppercase">Solana Slot & Hash:</span>
-                    <span className="text-xs text-cyan-300 font-bold">SLOT {report.attestationProof.attestationSlot}</span>
-                  </div>
+            {/* Formal Certificate Content */}
+            <div className={`p-4 sm:p-5 rounded-2xl bg-black/70 border ${statusBorder} space-y-3.5 shadow-inner`}>
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
+                <div>
+                  <span className="text-[10px] text-slate-500 block uppercase">Security Verdict & Classification:</span>
+                  <span className={`text-base font-black tracking-wide ${statusColor}`}>
+                    {report.categoryLabel} ({report.riskScore}/100 RISK)
+                  </span>
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                    <span className="text-[10px] text-slate-500 block uppercase mb-1">Target Token Mint:</span>
-                    <span className="text-cyan-300 break-all text-[11px] font-bold">{report.mint}</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                    <span className="text-[10px] text-slate-500 block uppercase mb-1">Anchor PDA Certificate:</span>
-                    <span className="text-emerald-300 break-all text-[11px] font-bold">{report.attestationProof.pdaAddress}</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                    <span className="text-[10px] text-slate-500 block uppercase mb-1">Transfer Hook & Taxes:</span>
-                    <span className="text-white text-[11px]">
-                      {report.extensions.hasTransferHook ? 'DETECTED (CPI HOOK)' : 'None (Safe)'} | Fee: {(report.extensions.transferFeeBps / 100).toFixed(2)}%
-                    </span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                    <span className="text-[10px] text-slate-500 block uppercase mb-1">Pre-Flight Simulation:</span>
-                    <span className="text-white text-[11px]">
-                      {report.simulation.canExecuteSell ? 'VERIFIED NON-HONEYPOT (PASS)' : 'BLOCKED / REVERTED'}
-                    </span>
-                  </div>
+                <div className="text-right">
+                  <span className="text-[10px] text-slate-500 block uppercase">Solana Slot:</span>
+                  <span className="text-xs text-cyan-300 font-bold">SLOT {report.attestationProof.attestationSlot}</span>
                 </div>
+              </div>
 
-                <div className="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-[11px] text-slate-300 leading-relaxed font-sans">
-                  <p>
-                    <strong className="text-emerald-400 font-mono">Cryptographic Verification:</strong> This formal certificate authenticates that on-chain storage layout (TLV extensions), mint & freeze authorities, and transaction invariants were verified on Solana.
-                  </p>
-                  <div className="mt-2 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono text-slate-400">
-                    <span>AUDITOR SIGNER: {report.attestationProof.auditorAuthority}</span>
-                    <span>ANCHOR ID: Guard1111...</span>
-                  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Target Token Mint:</span>
+                  <span className="text-cyan-300 break-all text-[11px] font-bold">{report.mint}</span>
+                </div>
+                <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Anchor PDA Certificate:</span>
+                  <span className="text-emerald-300 break-all text-[11px] font-bold">{report.attestationProof.pdaAddress}</span>
+                </div>
+                <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Transfer Hook & Taxes:</span>
+                  <span className="text-white text-[11px]">
+                    {report.extensions.hasTransferHook ? 'DETECTED (CPI HOOK)' : 'None (Safe)'} | Fee: {(report.extensions.transferFeeBps / 100).toFixed(2)}%
+                  </span>
+                </div>
+                <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                  <span className="text-[10px] text-slate-500 block uppercase mb-1">Pre-Flight Simulation:</span>
+                  <span className="text-white text-[11px]">
+                    {report.simulation.canExecuteSell ? 'VERIFIED NON-HONEYPOT (PASS)' : 'BLOCKED / REVERTED'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-[11px] text-slate-300 leading-relaxed font-sans">
+                <p>
+                  <strong className="text-emerald-400 font-mono">Cryptographic Verification:</strong> This formal certificate authenticates that on-chain storage layout (TLV extensions), mint & freeze authorities, and transaction invariants were verified on Solana.
+                </p>
+                <div className="mt-2 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono text-slate-400">
+                  <span>AUDITOR SIGNER: {report.attestationProof.auditorAuthority}</span>
+                  <span>ANCHOR ID: Guard1111...</span>
                 </div>
               </div>
             </div>
 
             {/* Actions: Download JSON & Print Official Proof */}
-            <div className="no-print p-4 sm:p-5 border-t border-white/[0.08] bg-white/[0.01] flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
+            <div className="no-print pt-1 flex flex-wrap items-center justify-between gap-3">
               <button
                 onClick={handlePrintCertificate}
-                className="px-5 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-bold text-cyan-300 hover:text-white flex items-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(6,182,212,0.15)]"
+                className="px-4 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-bold text-cyan-300 hover:text-white flex items-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(6,182,212,0.15)]"
               >
                 <Printer className="w-4 h-4 text-cyan-400" />
                 <span>SAVE CERTIFICATE AS PDF (PRINT)</span>
