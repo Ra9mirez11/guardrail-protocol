@@ -49,6 +49,17 @@ import { TransferHookDecompiler } from '@/components/TransferHookDecompiler';
 // WalletMultiButton handled by SSR-safe WalletButtonWrapper
 
 export default function Home() {
+  const handleOpenDialTo = (targetMint?: string) => {
+    if (typeof window === 'undefined') return;
+    const currentOrigin = window.location.origin;
+    if (currentOrigin.includes('localhost') || currentOrigin.includes('127.0.0.1')) {
+      alert('Dial.to runner requires your public live Vercel URL, not localhost.');
+      return;
+    }
+    const mintToAudit = targetMint || mintInput;
+    const targetUrl = `https://dial.to/?action=solana-action:${encodeURIComponent(`${currentOrigin}/api/actions/scan?mint=${mintToAudit}`)}`;
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+  };
   const [mintInput, setMintInput] = useState('CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo');
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<SecurityAuditReport | null>(null);
@@ -511,15 +522,14 @@ export default function Home() {
                       <span>{copiedBlink ? 'COPIED' : 'COPY'}</span>
                     </button>
                   </div>
-                  <a
-                    href={`https://dial.to/?action=solana-action:${encodeURIComponent(typeof window !== 'undefined' ? `${window.location.origin}/api/actions/scan?mint=${report.mint}` : `https://guardrail-protocol.vercel.app/api/actions/scan?mint=${report.mint}`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => handleOpenDialTo(report.mint)}
                     className="w-full mt-2.5 py-2.5 px-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-[11px] font-mono font-bold text-cyan-300 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-[0_0_15px_rgba(6,182,212,0.15)]"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                     <span>TEST IN DIAL.TO BLINK RUNNER</span>
-                  </a>
+                  </button>
                 </TiltCard>
               </div>
 
