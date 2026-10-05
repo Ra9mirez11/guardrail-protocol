@@ -46,6 +46,7 @@ import { SimulatorCard } from '@/components/SimulatorCard';
 import { AttestationBadge } from '@/components/AttestationBadge';
 import { IntroSplash } from '@/components/IntroSplash';
 import { TransferHookDecompiler } from '@/components/TransferHookDecompiler';
+import { SolanaBlinkCard } from '@/components/SolanaBlinkCard';
 // WalletMultiButton handled by SSR-safe WalletButtonWrapper
 
 export default function Home() {
@@ -491,46 +492,8 @@ export default function Home() {
                     </div>
                   </TiltCard>
 
-                {/* Twitter / Solana Blink Card */}
-                <TiltCard className="bg-[#070912]/80 backdrop-blur-2xl border border-white/[0.08] p-6 shadow-2xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                      <Share2 className="w-4 h-4 text-cyan-400" />
-                      Solana Blink Action Card
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-400/10 text-cyan-300 border border-cyan-400/30">
-                      X / TWITTER NATIVE
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Share 1-click verifiable audits directly inside Twitter feeds:
-                  </p>
-                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-black/60 border border-white/[0.08]">
-                    <span className="text-xs font-mono text-slate-300 truncate flex-1">
-                      /api/actions/scan?mint={report.mint.slice(0, 8)}...
-                    </span>
-                    <button
-                      onClick={() => {
-                        const url = typeof window !== 'undefined' ? `${window.location.origin}/api/actions/scan?mint=${report.mint}` : `/api/actions/scan?mint=${report.mint}`;
-                        navigator.clipboard.writeText(url);
-                        setCopiedBlink(true);
-                        setTimeout(() => setCopiedBlink(false), 2000);
-                      }}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-400 text-black font-bold text-xs font-mono flex items-center gap-1 shadow-md"
-                    >
-                      {copiedBlink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>{copiedBlink ? 'COPIED' : 'COPY'}</span>
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleOpenDialTo(report.mint)}
-                    className="w-full mt-2.5 py-2.5 px-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-[11px] font-mono font-bold text-cyan-300 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-[0_0_15px_rgba(6,182,212,0.15)]"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>TEST IN DIAL.TO BLINK RUNNER</span>
-                  </button>
-                </TiltCard>
+                {/* Native Solana Blink Action Card */}
+                <SolanaBlinkCard report={report} onScanMint={(mint) => handleScan(mint)} />
               </div>
 
               {/* BENTO ITEM 3: TOKEN-2022 ATTACK VECTOR MATRIX (Col 12 - 4 Columns) */}
