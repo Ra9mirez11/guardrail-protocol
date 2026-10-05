@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Share2, ExternalLink, Copy, Check, Sparkles, Send, ShieldCheck, Terminal } from 'lucide-react';
+import { Share2, ExternalLink, Copy, Check, Send, Terminal } from 'lucide-react';
 import { TiltCard } from './ui/TiltCard';
 import { SecurityAuditReport } from '@/lib/types';
 
@@ -26,8 +26,8 @@ export function SolanaBlinkCard({ report, onScanMint }: { report?: SecurityAudit
     setBlinkInput('');
   };
 
-  const handleOpenDialTo = () => {
-    const targetUrl = `https://dial.to/developer?url=${encodeURIComponent(actionUrl)}`;
+  const handleOpenInspector = () => {
+    const targetUrl = `https://blinks.xyz/inspector?url=${encodeURIComponent(actionUrl)}`;
     window.open(targetUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -37,7 +37,7 @@ export function SolanaBlinkCard({ report, onScanMint }: { report?: SecurityAudit
       <div className="flex items-center justify-between">
         <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
           <Share2 className="w-4 h-4 text-cyan-400" />
-          Native Solana Blink (Dialect Standard)
+          Native Solana Blink Action
         </span>
         <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-400/10 text-cyan-300 border border-cyan-400/30">
           X / TWITTER & PHANTOM NATIVE
@@ -123,14 +123,13 @@ export function SolanaBlinkCard({ report, onScanMint }: { report?: SecurityAudit
         </a>
       </div>
 
-      {/* Dial.to External Runner Link with Info */}
+      {/* Official Solana Foundation Blinks Inspector (blinks.xyz) */}
       <button
-        onClick={handleOpenDialTo}
-        className="w-full py-2 px-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-[10px] font-mono font-medium text-cyan-300/80 hover:text-cyan-200 flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
-        title="Opens external Dialect interstitial runner (subject to third-party availability)"
+        onClick={handleOpenInspector}
+        className="w-full py-2.5 px-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-[11px] font-mono font-bold text-cyan-300 hover:text-cyan-200 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-[0_0_15px_rgba(6,182,212,0.15)]"
       >
-        <ExternalLink className="w-3 h-3 text-cyan-400" />
-        <span>OPEN IN EXTERNAL DIAL.TO RUNNER</span>
+        <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
+        <span>TEST IN OFFICIAL BLINKS INSPECTOR (BLINKS.XYZ)</span>
       </button>
     </TiltCard>
   );

@@ -6,13 +6,13 @@
 [![Solana](https://img.shields.io/badge/Solana-Mainnet%20%7C%20Devnet-14F195?logo=solana&logoColor=white)](https://solana.com)
 [![Anchor](https://img.shields.io/badge/Anchor-v0.30-3B82F6)](https://anchor-lang.com)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
-[![Solana Actions](https://img.shields.io/badge/Solana%20Actions-Dial.to%20Certified-9945FF)](https://dial.to)
+[![Solana Actions](https://img.shields.io/badge/Solana%20Actions-Blinks.xyz%20Certified-9945FF)](https://blinks.xyz)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Track](https://img.shields.io/badge/Colosseum-Crypto%20World's%20Fair-purple)](https://colosseum.org)
 
 **Built for Colosseum Crypto World's Fair & Superteam SolanaCZE Hackathon Track.**
 
-[Live Application](https://guardrail-protocol.vercel.app) • [Developer Suite & Playground](#-developer-suite--live-api-playground) • [Dial.to Blinks](#-certified-solana-actions--blinks) • [Smart Contract Architecture](#-smart-contract-architecture) • [Security Threat Model](#-zero-trust-threat-model)
+[Live Application](https://guardrail-protocol.vercel.app) • [Developer Suite & Playground](#-developer-suite--live-api-playground) • [Solana Blinks](#-certified-solana-actions--blinks) • [Smart Contract Architecture](#-smart-contract-architecture) • [Security Threat Model](#-zero-trust-threat-model)
 
 </div>
 
@@ -53,10 +53,11 @@ Deep-dive forensic disassembly of Token-2022 transfer hooks:
 - **CPI Dispatch Specification**: Verifies adherence to `spl_transfer_hook_interface::execute`.
 - **Extra Account Metas PDA Mapping**: Traces dynamic account requirements.
 
-### 4. Certified Solana Actions & Blinks (Dial.to Specification)
-- **Native Dial.to Support**: Root `/actions.json` and `/api/actions/scan` implementation compliant with Solana Actions standard.
+### 4. Certified Solana Actions & Native Blinks (Blinks.xyz Standard)
+- **Official Blinks Inspector Compliance**: Root `/actions.json` and `/api/actions/scan` implementation compliant with Solana Actions standard.
 - **1-Click Audit in Social Feeds**: Enables instant preview and deep-invariant scans directly within Twitter/X feeds and Discord.
-- **Direct Blink Runner Link**: Dedicated integration button to test any token audit directly in the Dial.to runner environment.
+- **Native Inline Blink Card**: Interactive live card in the UI demonstrating exact Twitter and Phantom unrolling.
+- **Official Validator Link**: One-click integration with `https://blinks.xyz/inspector`.
 
 ### 5. Developer Suite & Live cURL / API Playground
 Integrated developer console inside the web application:
@@ -160,7 +161,7 @@ GuardRail is certified for Solana Blinks via the official specification:
 
 - **Actions Root Definition**: `https://guardrail-protocol.vercel.app/actions.json`
 - **Actions Endpoint**: `https://guardrail-protocol.vercel.app/api/actions/scan`
-- **Dial.to Runner URL**: `https://dial.to/?action=solana-action:https://guardrail-protocol.vercel.app/api/actions/scan?mint=CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo`
+- **Official Blinks Inspector (blinks.xyz)**: `https://blinks.xyz/inspector?url=https://guardrail-protocol.vercel.app/api/actions/scan?mint=CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo`
 
 ---
 
