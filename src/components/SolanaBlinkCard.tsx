@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Share2, ExternalLink, Copy, Check, Send, Terminal } from 'lucide-react';
+import { Share2, ExternalLink, Copy, Check, Send, Terminal, Sparkles } from 'lucide-react';
 import { TiltCard } from './ui/TiltCard';
 import { SecurityAuditReport } from '@/lib/types';
 
@@ -51,12 +51,12 @@ export function SolanaBlinkCard({ report, onScanMint }: { report?: SecurityAudit
       {/* Interactive Blink Preview Box */}
       <div className="rounded-2xl bg-black/85 border border-cyan-500/30 p-4 space-y-3 font-mono shadow-[0_0_30px_rgba(6,182,212,0.1)]">
         {/* Blink Metadata Header */}
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl overflow-hidden bg-black border border-white/[0.1] flex-shrink-0 p-1">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-emerald-950/40 border border-emerald-500/30 flex-shrink-0 p-1 flex items-center justify-center">
             <img 
-              src="https://raw.githubusercontent.com/solana-developers/brand-kit/main/assets/png/solana-badge-black.png" 
-              alt="Blink Logo" 
-              className="w-full h-full object-contain"
+              src="/logo.png" 
+              alt="GuardRail Logo" 
+              className="w-full h-full object-cover rounded-lg"
             />
           </div>
           <div className="flex-1 min-w-0">
