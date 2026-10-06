@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Share2, ExternalLink, Copy, Check, Send, Terminal, Sparkles } from 'lucide-react';
+import { Share2, ExternalLink, Copy, Check, Send, Terminal } from 'lucide-react';
 import { TiltCard } from './ui/TiltCard';
 import { SecurityAuditReport } from '@/lib/types';
 
@@ -27,7 +27,7 @@ export function SolanaBlinkCard({ report, onScanMint }: { report?: SecurityAudit
   };
 
   const handleOpenInspector = () => {
-    const targetUrl = `https://blinks.xyz/inspector?url=${encodeURIComponent(actionUrl)}`;
+    const targetUrl = `https://dial.to/?action=solana-action:${encodeURIComponent(actionUrl)}`;
     window.open(targetUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -123,13 +123,13 @@ export function SolanaBlinkCard({ report, onScanMint }: { report?: SecurityAudit
         </a>
       </div>
 
-      {/* Official Solana Foundation Blinks Inspector (blinks.xyz) */}
+      {/* Official Solana Blinks Explorer (dial.to) */}
       <button
         onClick={handleOpenInspector}
         className="w-full py-2.5 px-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-[11px] font-mono font-bold text-cyan-300 hover:text-cyan-200 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-[0_0_15px_rgba(6,182,212,0.15)]"
       >
         <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
-        <span>TEST IN OFFICIAL BLINKS INSPECTOR (BLINKS.XYZ)</span>
+        <span>TEST LIVE IN DIALECT (DIAL.TO)</span>
       </button>
     </TiltCard>
   );
