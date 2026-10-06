@@ -6,7 +6,7 @@
 [![Solana](https://img.shields.io/badge/Solana-Mainnet%20%7C%20Devnet-14F195?logo=solana&logoColor=white)](https://solana.com)
 [![Anchor](https://img.shields.io/badge/Anchor-v0.30-3B82F6)](https://anchor-lang.com)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
-[![Solana Actions](https://img.shields.io/badge/Solana%20Actions-Blinks.xyz%20Certified-9945FF)](https://blinks.xyz)
+[![Solana Actions](https://img.shields.io/badge/Solana%20Actions-Dialect%20Blinks-9945FF)](https://dial.to)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Track](https://img.shields.io/badge/Colosseum-Crypto%20World's%20Fair-purple)](https://colosseum.org)
 
@@ -57,7 +57,7 @@ Deep-dive forensic disassembly of Token-2022 transfer hooks:
 - **Official Blinks Inspector Compliance**: Root `/actions.json` and `/api/actions/scan` implementation compliant with Solana Actions standard.
 - **1-Click Audit in Social Feeds**: Enables instant preview and deep-invariant scans directly within Twitter/X feeds and Discord.
 - **Native Inline Blink Card**: Interactive live card in the UI demonstrating exact Twitter and Phantom unrolling.
-- **Official Validator Link**: One-click integration with `https://blinks.xyz/inspector`.
+- **Official Validator Link**: One-click integration with Dialect Blinks (`dial.to`).
 
 ### 5. Developer Suite & Live cURL / API Playground
 Integrated developer console inside the web application:
@@ -161,7 +161,7 @@ GuardRail is certified for Solana Blinks via the official specification:
 
 - **Actions Root Definition**: `https://guardrail-protocol.vercel.app/actions.json`
 - **Actions Endpoint**: `https://guardrail-protocol.vercel.app/api/actions/scan`
-- **Official Blinks Inspector (blinks.xyz)**: `https://blinks.xyz/inspector?url=https://guardrail-protocol.vercel.app/api/actions/scan?mint=CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo`
+- **Official Blinks Inspector (dial.to)**: `https://dial.to/?action=solana-action:https://guardrail-protocol.vercel.app/api/actions/scan?mint=CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo`
 
 ---
 
@@ -172,4 +172,4 @@ GuardRail is certified for Solana Blinks via the official specification:
 - **Repository:** [https://github.com/Ra9mirez11/guardrail-protocol](https://github.com/Ra9mirez11/guardrail-protocol)
 - **Live Demo:** [https://guardrail-protocol.vercel.app](https://guardrail-protocol.vercel.app)
 - **Cluster:** Solana Mainnet-Beta (Audit Engine) & Solana Devnet (On-Chain Proofs)
-- **License:** MIT License (Signed by Bohumel)
+- **License:** MIT License (Signed by Ra9mirez11)
