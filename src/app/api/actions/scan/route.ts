@@ -1,8 +1,11 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
-import { ActionGetResponse, ACTION_HEADERS } from '@/lib/actionTypes';
+import { NextRequest, NextResponse } from 'next/server';
+import { PublicKey, Transaction, TransactionInstruction, Connection } from '@solana/web3.js';
+import { ActionGetResponse, ActionPostResponse, ACTION_HEADERS } from '@/lib/actionTypes';
 import { GuardRailInspector } from '@/lib/tokenInspector';
 
 export const runtime = 'nodejs';
+
+const MEMO_PROGRAM_ID = new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
 
 export async function OPTIONS() {
   return new Response(null, { headers: ACTION_HEADERS });
@@ -31,18 +34,23 @@ export async function GET(req: NextRequest) {
     title,
     icon,
     description,
-    label: 'Deep Invariant Check',
+    label: 'Stamp Attestation On-Chain',
     links: {
       actions: [
         {
-          label: 'Inspect Token',
-          href: `/api/actions/scan?mint={mintInput}`,
+          label: 'Verify Mint',
+          href: '/api/actions/scan?mint={mintInput}',
           parameters: [
             {
               name: 'mintInput',
-              label: 'Solana Mint Address'
+              label: 'Solana Token Mint Address',
+              required: true
             }
           ]
+        },
+        {
+          label: 'Stamp Proof On-Chain',
+          href: `/api/actions/scan?mint=${mint}`
         }
       ]
     }
@@ -51,8 +59,67 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(payload, { headers: ACTION_HEADERS });
 }
 
-export async function POST() {
-  return NextResponse.json({
-    message: 'GuardRail Read-Only Zero-Trust Pre-flight verification complete. No funds debited.'
-  }, { headers: ACTION_HEADERS });
+export async function POST(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const mint = searchParams.get('mint') || 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263';
+
+  try {
+    const body = await req.json();
+    const account = body?.account;
+
+    if (!account) {
+      return NextResponse.json(
+        { message: 'Missing account in request body.' },
+        { status: 400, headers: ACTION_HEADERS }
+      );
+    }
+
+    let userPubkey: PublicKey;
+    try {
+      userPubkey = new PublicKey(account);
+    } catch {
+      return NextResponse.json(
+        { message: 'Invalid Solana public key provided in account field.' },
+        { status: 400, headers: ACTION_HEADERS }
+      );
+    }
+
+    const rpcUrl = process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com';
+    const inspector = new GuardRailInspector(rpcUrl);
+    const report = await inspector.inspectMint(mint);
+
+    const memoText = `[GuardRail Attestation] Mint: ${mint.slice(0, 8)}... | Risk: ${report.riskScore}/100 (${report.riskLevel}) | Zero-Trust Firewall Verified`;
+
+    const memoInstruction = new TransactionInstruction({
+      keys: [{ pubkey: userPubkey, isSigner: true, isWritable: true }],
+      programId: MEMO_PROGRAM_ID,
+      data: Buffer.from(memoText, 'utf-8'),
+    });
+
+    const connection = new Connection(rpcUrl, 'confirmed');
+    const { blockhash } = await connection.getLatestBlockhash('confirmed');
+
+    const transaction = new Transaction();
+    transaction.add(memoInstruction);
+    transaction.feePayer = userPubkey;
+    transaction.recentBlockhash = blockhash;
+
+    const serializedTx = transaction.serialize({
+      requireAllSignatures: false,
+      verifySignatures: false
+    }).toString('base64');
+
+    const responsePayload: ActionPostResponse = {
+      transaction: serializedTx,
+      message: `GuardRail Security Attestation verified: ${report.riskLevel} (${report.riskScore}/100 Risk).`
+    };
+
+    return NextResponse.json(responsePayload, { headers: ACTION_HEADERS });
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Internal Server Error';
+    return NextResponse.json(
+      { message: `Action processing failed: ${errorMessage}` },
+      { status: 500, headers: ACTION_HEADERS }
+    );
+  }
 }

@@ -1,8 +1,12 @@
-{
-  "rules": [
+﻿{
+  rules: [
     {
-      "pathPattern": "/api/actions/**",
-      "apiPath": "/api/actions/**"
+      pathPattern: /scan/**,
+      apiPath: /api/actions/scan/**
+    },
+    {
+      pathPattern: /api/actions/**,
+      apiPath: /api/actions/**
     }
   ]
 }

@@ -1,26 +1,43 @@
+﻿export type ActionType = 'action' | 'completed';
+
+export interface ActionParameter {
+  name: string;
+  label?: string;
+  required?: boolean;
+}
+
+export interface LinkedAction {
+  label: string;
+  href: string;
+  parameters?: ActionParameter[];
+}
+
 export interface ActionGetResponse {
+  type?: ActionType;
   icon: string;
   title: string;
   description: string;
   label: string;
   disabled?: boolean;
   links?: {
-    actions: {
-      href: string;
-      label: string;
-      parameters?: {
-        name: string;
-        label?: string;
-        required?: boolean;
-      }[];
-    }[];
+    actions: LinkedAction[];
   };
-  errorMessage?: string;
+  error?: {
+    message: string;
+  };
+}
+
+export interface ActionPostRequest {
+  account: string;
 }
 
 export interface ActionPostResponse {
   transaction: string;
   message?: string;
+}
+
+export interface ActionError {
+  message: string;
 }
 
 export const ACTION_HEADERS = {
