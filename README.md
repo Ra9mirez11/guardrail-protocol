@@ -103,7 +103,7 @@ flowchart TD
 Add GuardRail security verification to your GitHub Actions or deployment pipeline:
 
 ```bash
-npx guardrail-scanner <TARGET_MINT> \
+npx guardrail-scan <TARGET_MINT> \
   --cluster devnet \
   --max-tax-bps 500 \
   --assert-no-transfer-hooks \
@@ -151,7 +151,20 @@ pub fn safe_swap(ctx: Context<SafeSwap>, max_tax_bps: u16) -> Result<()> {
 
 ```bash
 curl -X GET "https://guardrail-protocol.vercel.app/api/scan?mint=CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo"
+```
+
+### 5. AI Agent Security Tool (Solana Agent Kit & ElizaOS)
+Autonomous AI agents trading or interacting on Solana can enforce zero-trust pre-execution gating via standardized manifests:
+- **OpenAPI 3.1 Schema**: `https://guardrail-protocol.vercel.app/openapi.json`
+- **AI Plugin Manifest**: `https://guardrail-protocol.vercel.app/.well-known/ai-plugin.json`
+
+### 6. Embeddable Dynamic Security Badge
+Token creators and DeFi interfaces can embed verifiable, live-updating SVG security badges:
+
+```markdown
+[![GuardRail Security](https://guardrail-protocol.vercel.app/api/badge?mint=CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo)](https://guardrail-protocol.vercel.app)
 ```
+Direct SVG Endpoint: `https://guardrail-protocol.vercel.app/api/badge?mint=<MINT_ADDRESS>`
 
 ---
 
